@@ -1,7 +1,18 @@
+using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
+using Stationery.Data;
+using Stationery.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+builder.Services.AddDbContext<StationeryDbContext>(options =>
+    options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services
+    .AddIdentity<StationeryUser, IdentityRole>()
+    .AddEntityFrameworkStores<StationeryDbContext>()
+    .AddDefaultTokenProviders();
 
 var app = builder.Build();
 
