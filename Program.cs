@@ -15,7 +15,12 @@ builder.Services
     .AddDefaultTokenProviders();
 
 var app = builder.Build();
-
+using (var scope = app.Services.CreateAsyncScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<StationeryDbContext>();
+    await db.Database.MigrateAsync();
+    await DbInitializer.SeedAsync(scope.ServiceProvider);
+}
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
 {

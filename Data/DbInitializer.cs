@@ -20,6 +20,8 @@ public static class DbInitializer
             }
         }
         await SeedUserAsync(userManager, "rabiye@admin.com", "Admin123.", "Rabiye Kargin", "Admin");
+        await SeedUserAsync(userManager, "müsteri1@customer.com", "Customer123.", "Müsteri Bir", "Customer");
+        await SeedUserAsync(userManager, "müsteri2@customer.com", "Customer123.", "Müsteri İki", "Customer");
     }
     private static async Task SeedUserAsync(UserManager<StationeryUser>userManager, string email, string password, string fullName,string role)
     {

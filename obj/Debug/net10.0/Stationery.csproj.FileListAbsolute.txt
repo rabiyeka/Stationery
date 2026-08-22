@@ -186,3 +186,5 @@
 /Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/Stationery.pdb
 /Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/Stationery.genruntimeconfig.cache
 /Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/ref/Stationery.dll
+/Users/rabiyekargin/Desktop/Stationery/bin/Debug/net10.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
+/Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/Stationery.sourcelink.json
