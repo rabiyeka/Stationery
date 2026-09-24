@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Stationery.Data;
 using Stationery.Models;
 using Stationery.Repositories;
+using Stationery.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,7 +18,7 @@ builder.Services
 
 builder.Services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
-
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 var app = builder.Build();
 using (var scope = app.Services.CreateAsyncScope())
 {
