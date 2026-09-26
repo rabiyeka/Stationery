@@ -20,13 +20,14 @@ namespace Stationery.Controllers
             _brandService = brandService;
         }
 
-        public async Task<IActionResult> Index(int? categoryId)
+        public async Task<IActionResult> Index(int? categoryId, int? brandId)
         {
             var model = new ProductsIndexViewModel
             {
-                Products = await _productService.GetAllProductsAsync(categoryId),
+                Products = await _productService.GetAllProductsAsync(categoryId, brandId),
                 Categories = await _categoryService.GetCategoriesForFilterAsync(),
                 SelectedCategoryId = categoryId,
+                SelectedBrandId = brandId,
                 Brands = await _brandService.GetAllBrandsForFilterAsync()
             };
             return View(model);

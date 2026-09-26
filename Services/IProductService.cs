@@ -6,9 +6,10 @@ namespace Stationery.Services;
 
 public interface IProductService
 {
-    Task<IList<ProductListViewModel>> GetAllProductsAsync(int? categoryId= null);
+    
     Task<ProductDetailsViewModel?> GetProductDetailsAsync(int id);
     Task<IList<ProductListViewModel>> GetProductsForAdminAsync();
+    Task<IList<ProductListViewModel>> GetAllProductsAsync(int? categoryId = null, int? brandId = null);
     Task<(bool Success, int? ProductId, string? Error)> CreateProductAsync(AdminProductFormViewModel model);
     Task<(bool Success, string? Error)> UpdateProductAsync(AdminProductFormViewModel model);
     Task<(bool Success, string? Error)> DeleteProductAsync(int id);

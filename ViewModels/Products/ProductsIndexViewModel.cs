@@ -8,5 +8,6 @@ public class ProductsIndexViewModel
     public IList<CategoryFilterViewModel> Categories { get; set; } = [];
     public IList<BrandFilterViewModel> Brands { get; set; } = [];
     public int? SelectedCategoryId { get; set; }
+    public int? SelectedBrandId { get; set; }
 
 }

@@ -49,17 +49,30 @@ public class ProductService : IProductService
         return (true, null);
     }
 
-    public async Task<IList<ProductListViewModel>> GetAllProductsAsync(int? categoryId = null)
+    public async Task<IList<ProductListViewModel>> GetAllProductsAsync(int? categoryId = null, int? brandId = null)
     {
         var query = _unitOfWork.Products.Query()
             .Include(p => p.Category)
             .Include(p => p.Brand)
             .AsQueryable();
+
+        // Kategori Filtresi
         if (categoryId is > 0)
         {
             query = query.Where(p => p.CategoryId == categoryId);
         }
-        return await query.OrderBy(p=> p.Name)
+
+        var query2= _unitOfWork.Brands.Query()
+            .Include(b => b.Products)
+            .AsQueryable();
+        // Marka Filtresi 
+        if (brandId is > 0)
+        {
+            query = query.Where(p => p.BrandId == brandId);
+        }
+        var products = await query.ToListAsync();
+
+        return await query.OrderBy(p => p.Name)
             .Select(p => new ProductListViewModel
             {
                 Id = p.Id,
@@ -72,12 +85,11 @@ public class ProductService : IProductService
                 CategoryName = p.Category!.Name ?? string.Empty
             })
             .ToListAsync();
-        
     }
 
     public async Task<ProductDetailsViewModel?> GetProductDetailsAsync(int id)
     {
-        if(id <= 0) return null!;
+        if (id <= 0) return null!;
         var product = await _unitOfWork.Products.Query()
             .Include(p => p.Category)
             .Include(p => p.Brand)
@@ -128,10 +140,10 @@ public class ProductService : IProductService
     public async Task<AdminProductFormViewModel?> GetProductForEditAsync(int id)
     {
         var product = await _unitOfWork.Products.GetByIdAsync(id);
-        if (product is null) 
-            {
+        if (product is null)
+        {
             return null;
-            }
+        }
         return new AdminProductFormViewModel
         {
             Id = product.Id,
@@ -156,20 +168,20 @@ public class ProductService : IProductService
         {
             return (false, null, "Geçersiz dosya.");
         }
-        string[] allowed = [".jpg",".jpeg",".png",".webp",".gif"];
+        string[] allowed = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
         var extension = Path.GetExtension(file.FileName).ToLowerInvariant();
         if (!allowed.Contains(extension))
         {
             return (false, null, "Yalnızca resim dosyaları yüklenebilir.");
         }
-        var directory = Path.Combine(env.WebRootPath,"images","products");
+        var directory = Path.Combine(env.WebRootPath, "images", "products");
         if (!Directory.Exists(directory))
         {
             Directory.CreateDirectory(directory);
         }
         var fileName = $"{id}_{Guid.NewGuid():N}{extension}";
-        
-        var filePath = Path.Combine(directory,fileName);
+
+        var filePath = Path.Combine(directory, fileName);
         await using (var stream = new FileStream(filePath, FileMode.Create))
         {
             await file.CopyToAsync(stream);

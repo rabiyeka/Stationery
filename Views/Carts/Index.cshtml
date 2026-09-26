@@ -1,0 +1,126 @@
+@model Stationery.Models.Cart
+
+@{
+    ViewData["Title"] = "Sepetim";
+    var cartItems = Model?.CartItems;
+    var grandTotal = cartItems?.Sum(x => x.Quantity * (x.Product?.Price ?? 0)) ?? 0;
+}
+
+<div class="container my-5">
+    <h3 class="fw-bold mb-4"><i class="bi bi-cart3 me-2"></i>Alışveriş Sepetim</h3>
+
+    <!-- TempData Bildirimleri -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (cartItems == null || !cartItems.Any())
+    {
+        <div class="alert alert-info text-center py-5 rounded-4 shadow-sm bg-white border">
+            <i class="bi bi-cart-x display-1 d-block mb-3 text-muted"></i>
+            <h5 class="fw-bold text-dark">Sepetinizde ürün bulunmamaktadır.</h5>
+            <p class="text-muted">Kırtasiye ürünlerimize göz atarak sepetinizi doldurabilirsiniz.</p>
+            <a asp-controller="Products" asp-action="Index" class="btn btn-primary rounded-pill mt-2 px-4 py-2 fw-semibold">
+                <i class="bi bi-bag-plus me-1"></i> Alışverişe Başla
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="row g-4">
+            <!-- Ürün Listesi Tablosu -->
+            <div class="col-lg-8">
+                <div class="card border-0 shadow-sm rounded-4 p-3 bg-white">
+                    <div class="table-responsive">
+                        <table class="table align-middle mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Ürün</th>
+                                    <th>Fiyat</th>
+                                    <th class="text-center">Adet</th>
+                                    <th class="text-end">Toplam</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var item in cartItems)
+                                {
+                                    var itemTotal = item.Quantity * (item.Product?.Price ?? 0);
+                                    <tr>
+                                        <td>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <img src="@(string.IsNullOrEmpty(item.Product?.ImageUrl) ? "https://via.placeholder.com/60" : item.Product.ImageUrl)"
+                                                     alt="@item.Product?.Name"
+                                                     style="width: 50px; height: 50px; object-fit: contain;">
+                                                <span class="fw-semibold text-dark">@item.Product?.Name</span>
+                                            </div>
+                                        </td>
+                                        <td>@item.Product?.Price.ToString("C2")</td>
+                                        <td class="text-center" style="width: 130px;">
+                                            <form asp-controller="Carts" asp-action="Update" method="post" class="d-flex align-items-center justify-content-center gap-1">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="cartItemId" value="@item.Id" />
+                                                <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm text-center rounded-3" onchange="this.form.submit()" />
+                                            </form>
+                                        </td>
+                                        <td class="text-end fw-bold text-primary">
+                                            @itemTotal.ToString("C2")
+                                        </td>
+                                        <td class="text-center">
+                                            <form asp-controller="Carts" asp-action="Remove" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="cartItemId" value="@item.Id" />
+                                                <button type="submit" class="btn btn-link text-danger p-0 border-0" title="Sil">
+                                                    <i class="bi bi-trash fs-5"></i>
+                                                </button>
+                                            </form>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sipariş Özeti ve Satın Al Butonu -->
+            <div class="col-lg-4">
+                <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
+                    <h5 class="fw-bold mb-3 text-dark">Sipariş Özeti</h5>
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="text-muted">Ara Toplam</span>
+                        <span>@grandTotal.ToString("C2")</span>
+                    </div>
+                    <div class="d-flex justify-content-between mb-3">
+                        <span class="text-muted">Kargo</span>
+                        <span class="text-success fw-semibold">Ücretsiz</span>
+                    </div>
+                    <hr>
+                    <div class="d-flex justify-content-between mb-4 fs-5 fw-bold text-dark">
+                        <span>Genel Toplam</span>
+                        <span class="text-primary">@grandTotal.ToString("C2")</span>
+                    </div>
+
+                    <form asp-controller="Carts" asp-action="Checkout" method="post">
+                        @Html.AntiForgeryToken()
+                        <button type="submit" class="btn btn-success w-100 rounded-pill py-3 fw-bold d-flex align-items-center justify-content-center gap-2">
+                            <span>Satın Al / Siparişi Tamamla</span>
+                            <i class="bi bi-arrow-right"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    }
+</div>

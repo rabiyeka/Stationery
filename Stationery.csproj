@@ -18,6 +18,7 @@
   <ItemGroup>
     <Folder Include=".gitignore/" />
     <Folder Include="Data/" />
+    <Folder Include="Extensions/" />
     <Folder Include="Repositories/" />
     <Folder Include="Services/" />
     <Folder Include="ViewModels/Account/" />

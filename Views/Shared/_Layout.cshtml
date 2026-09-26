@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using Stationery.Extensions
+@using Stationery.ViewModels
+
+<!DOCTYPE html>
 <html lang="tr">
 <head>
     <meta charset="utf-8" />
@@ -6,7 +9,7 @@
     <title>@ViewData["Title"] - Stationery</title>
     <script type="importmap"></script>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Stationery.styles.css" asp-append-version="true" />
 </head>
@@ -33,27 +36,44 @@
                         </li>
                     </ul>
 
-                    <!-- Sağ Köşe: Giriş Yap / Kayıt Ol / Çıkış Yap Butonları -->
-                    <ul class="navbar-nav ms-auto align-items-center">
+                    <!-- Sağ Köşe: Sepetim / Giriş Yap / Kayıt Ol / Çıkış Yap -->
+                    <ul class="navbar-nav ms-auto align-items-center gap-2">
+                        <!-- SEPETİM BUTONU (Giriş durumundan bağımsız her zaman görünür) -->
+                        @{
+                            var sessionCart = Context.Session.GetObjectFromJson<List<CartSessionItem>>("Cart");
+                            var totalCount = sessionCart?.Sum(x => x.Quantity) ?? 0;
+                        }
+                        <li class="nav-item me-2">
+                            <a asp-controller="Carts" asp-action="Index" class="btn btn-outline-dark position-relative rounded-pill px-3 py-1 btn-sm">
+                                <i class="bi bi-cart3 me-1"></i> Sepetim
+                                @if (totalCount > 0)
+                                {
+                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                        @totalCount
+                                    </span>
+                                }
+                            </a>
+                        </li>
+
                         @if (User.Identity?.IsAuthenticated == true)
                         {
-                            <li class="nav-item me-3">
+                            <li class="nav-item me-2">
                                 <span class="text-dark fw-semibold">Merhaba, @User.Identity.Name</span>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                     @Html.AntiForgeryToken()
-                                    <button type="submit" class="btn btn-outline-danger btn-sm">Çıkış Yap</button>
+                                    <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">Çıkış Yap</button>
                                 </form>
                             </li>
                         }
                         else
                         {
-                            <li class="nav-item me-2">
-                                <a class="btn btn-outline-primary btn-sm" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-controller="Account" asp-action="Login">Giriş Yap</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-sm" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+                                <a class="btn btn-primary btn-sm rounded-pill px-3" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
                             </li>
                         }
                     </ul>
