@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include=".gitignore/" />
     <Folder Include="Data/" />
     <Folder Include="Repositories/" />
     <Folder Include="Services/" />

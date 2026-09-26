@@ -9,9 +9,9 @@ namespace Stationery.Services;
 
 public class ProductService : IProductService
 {
-    private readonly UnitOfWork _unitOfWork;
+    private readonly IUnitOfWork _unitOfWork;
 
-    public ProductService(UnitOfWork unitOfWork)
+    public ProductService(IUnitOfWork unitOfWork)
     {
         _unitOfWork = unitOfWork;
     }
