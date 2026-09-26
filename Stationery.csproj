@@ -22,7 +22,6 @@
     <Folder Include="ViewModels/Account/" />
     <Folder Include="ViewModels/Brands/" />
     <Folder Include="ViewModels/Carts/" />
-    <Folder Include="ViewModels/Categories/" />
     <Folder Include="ViewModels/Products/" />
   </ItemGroup>
 
