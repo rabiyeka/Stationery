@@ -1,0 +1,177 @@
+@model Stationery.ViewModels.Products.ProductsIndexViewModel
+
+@{
+    ViewData["Title"] = "Ürünler";
+}
+
+<!-- Hover ile Açılan Dropdown ve Kart Animasyon CSS'leri -->
+<style>
+    /* Dropdown menünün fareyle üzerine gelindiğinde açılması */
+    .dropdown-hover:hover .dropdown-menu {
+        display: block;
+        margin-top: 0;
+        animation: fadeIn 0.2s ease-in-out;
+    }
+    
+    /* Ürün kartına hover yapıldığında hafif yukarı kalkma efekti */
+    .product-card {
+        transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+    .product-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+
+    @@keyframes fadeIn {
+        from { opacity: 0; transform: translateY(5px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+</style>
+
+<div class="container my-4">
+
+    <!-- TempData Bildirimleri -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-check-circle-fill me-2"></i>@TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show rounded-3 shadow-sm mb-4" role="alert">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i>@TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <!-- Üst Filtre Barı (Kategoriler & Markalar Dropdown) -->
+    <div class="d-flex flex-wrap justify-content-between align-items-center bg-white p-3 rounded-4 shadow-sm mb-4 border border-light">
+        
+        <div class="d-flex align-items-center gap-2 flex-wrap">
+            <h4 class="fw-bold mb-0 me-3 text-dark">Kırtasiye Ürünleri</h4>
+
+            <!-- Kategoriler Dropdown -->
+            <div class="dropdown dropdown-hover">
+                <button class="btn btn-outline-primary rounded-pill px-3 py-2 fw-semibold dropdown-toggle d-flex align-items-center gap-2" type="button" id="categoryDropdown">
+                    <i class="bi bi-grid-3x3-gap-fill"></i> Kategoriler
+                </button>
+                <ul class="dropdown-menu shadow-lg border-0 rounded-3 p-2 mt-1" aria-labelledby="categoryDropdown" style="min-width: 220px;">
+                    <li>
+                        <a asp-action="Index" class="dropdown-item rounded-2 py-2 @(Model.SelectedCategoryId == null ? "active fw-bold" : "")">
+                            Tüm Ürünler
+                        </a>
+                    </li>
+                    <li><hr class="dropdown-divider"></li>
+                    @if (Model.Categories != null)
+                    {
+                        @foreach (var category in Model.Categories)
+                        {
+                            <li>
+                                <a asp-action="Index" asp-route-categoryId="@category.Id" 
+                                   class="dropdown-item rounded-2 py-2 @(Model.SelectedCategoryId == category.Id ? "active fw-bold" : "")">
+                                    @category.Name
+                                </a>
+                            </li>
+                        }
+                    }
+                </ul>
+            </div>
+
+            <!-- Markalar Dropdown -->
+            <div class="dropdown dropdown-hover">
+                <button class="btn btn-outline-secondary rounded-pill px-3 py-2 fw-semibold dropdown-toggle d-flex align-items-center gap-2" type="button" id="brandDropdown">
+                    <i class="bi bi-tags-fill"></i> Markalar
+                </button>
+                <ul class="dropdown-menu shadow-lg border-0 rounded-3 p-2 mt-1" aria-labelledby="brandDropdown" style="min-width: 200px; max-height: 280px; overflow-y: auto;">
+                    @if (Model.Brands != null && Model.Brands.Any())
+                    {
+                        @foreach (var brand in Model.Brands)
+                        {
+                            <li>
+                                <span class="dropdown-item rounded-2 py-1 text-secondary">
+                                    @brand.Name
+                                </span>
+                            </li>
+                        }
+                    }
+                    else
+                    {
+                        <li><span class="dropdown-item text-muted">Marka bulunamadı</span></li>
+                    }
+                </ul>
+            </div>
+        </div>
+
+        <!-- Ürün Sayısı Rozeti -->
+        <div class="mt-2 mt-sm-0">
+            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fs-6 fw-normal">
+                <strong>@(Model.Products?.Count() ?? 0)</strong> ürün listeleniyor
+            </span>
+        </div>
+    </div>
+
+    <!-- Tam Genişlik (Full Width) Ürün Izgarası -->
+    @if (Model.Products == null || !Model.Products.Any())
+    {
+        <div class="bg-white rounded-4 shadow-sm text-center py-5 my-4 border">
+            <i class="bi bi-box-seam display-1 text-muted mb-3 d-block"></i>
+            <h5 class="fw-bold text-dark">Ürün Bulunamadı</h5>
+            <p class="text-muted mb-3">Seçilen kategoriye ait gösterilecek ürün bulunmamaktadır.</p>
+            <a asp-action="Index" class="btn btn-primary rounded-pill px-4">Tüm Ürünleri Göster</a>
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+            @foreach (var product in Model.Products)
+            {
+                <div class="col">
+                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden product-card bg-white">
+                        
+                        <!-- Görsel ve Kategori Etiketi -->
+                        <div class="position-relative bg-light text-center p-3">
+                            <span class="badge bg-white text-dark shadow-sm position-absolute top-0 start-0 m-3 rounded-pill px-2 py-1 small">
+                                @product.CategoryName
+                            </span>
+                            <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://via.placeholder.com/300x220?text=Kirtasiye" : product.ImageUrl)"
+                                 class="img-fluid object-fit-contain" alt="@product.Name" style="height: 190px;">
+                        </div>
+
+                        <!-- Ürün İçeriği -->
+                        <div class="card-body d-flex flex-column p-3">
+                            <h6 class="card-title fw-bold text-dark mb-2 text-truncate" title="@product.Name">
+                                @product.Name
+                            </h6>
+
+                            <div class="mt-auto pt-2">
+                                <div class="d-flex align-items-baseline justify-content-between mb-3">
+                                    <span class="text-muted small">Fiyat</span>
+                                    <span class="fs-5 fw-bold text-primary">@product.Price.ToString("C2")</span>
+                                </div>
+
+                                <!-- Aksiyon Butonları -->
+                                <div class="d-grid gap-2">
+                                    <form asp-action="AddToCart" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="productId" value="@product.Id" />
+                                        <input type="hidden" name="returnUrl" value="@Context.Request.Path@Context.Request.QueryString" />
+                                        <button type="submit" class="btn btn-primary btn-sm w-100 rounded-3 py-2 fw-semibold d-flex align-items-center justify-content-center gap-1">
+                                            <i class="bi bi-cart-plus fs-6"></i> Sepete Ekle
+                                        </button>
+                                    </form>
+
+                                    <a asp-action="Details" asp-route-id="@product.Id" class="btn btn-light btn-sm w-100 rounded-3 py-1 text-muted fw-semibold border-0">
+                                        Detayları İncele
+                                    </a>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

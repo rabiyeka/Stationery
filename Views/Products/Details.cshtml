@@ -1,0 +1,78 @@
+@model Stationery.ViewModels.Products.ProductDetailsViewModel
+
+@{
+    ViewData["Title"] = Model.Name;
+}
+
+<div class="container my-5">
+
+    <!-- Hata/Başarı Bildirimleri -->
+    @if (TempData["Success"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show mb-4" role="alert">
+            @TempData["Success"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+    @if (TempData["Error"] != null)
+    {
+        <div class="alert alert-danger alert-dismissible fade show mb-4" role="alert">
+            @TempData["Error"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="card border-0 shadow-sm rounded-3 p-4">
+        <div class="row g-4 align-items-center">
+            <!-- Görsel Alanı -->
+            <div class="col-md-5 text-center">
+                <img src="@(string.IsNullOrEmpty(Model.ImageUrl) ? "https://via.placeholder.com/400x300?text=Kirtasiye" : Model.ImageUrl)"
+                     class="img-fluid rounded-3 shadow-sm" alt="@Model.Name" style="max-height: 350px; object-fit: contain;">
+            </div>
+
+            <!-- Ürün Bilgisi ve İşlem Alanı -->
+            <div class="col-md-7">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb mb-2">
+                        <li class="breadcrumb-item"><a asp-action="Index" class="text-decoration-none">Ürünler</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">@Model.CategoryName</li>
+                    </ol>
+                </nav>
+
+                <h2 class="fw-bold mb-2">@Model.Name</h2>
+
+                @if (!string.IsNullOrEmpty(Model.BrandName))
+                {
+                    <p class="text-muted mb-3">Marka: <span class="fw-semibold text-dark">@Model.BrandName</span></p>
+                }
+
+                <h3 class="text-primary fw-bold mb-4">@Model.Price.ToString("C2")</h3>
+
+                <p class="text-secondary mb-4">
+                    @(string.IsNullOrEmpty(Model.Description) ? "Bu ürün için bir açıklama girilmemiştir." : Model.Description)
+                </p>
+
+                <!-- Sepete Ekleme Formu -->
+                <form asp-action="AddToCart" method="post" class="mt-4">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" name="productId" value="@Model.Id" />
+                    <input type="hidden" name="returnUrl" value="@Context.Request.Path" />
+
+                    <div class="row g-3 align-items-center">
+                        <div class="col-auto">
+                            <label for="quantity" class="col-form-label fw-semibold">Adet:</label>
+                        </div>
+                        <div class="col-auto">
+                            <input type="number" id="quantity" name="quantity" class="form-control text-center" value="1" min="1" max="99" style="width: 80px;">
+                        </div>
+                        <div class="col-auto">
+                            <button type="submit" class="btn btn-primary btn-lg px-4 fs-6 fw-semibold">
+                                Sepete Ekle
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
