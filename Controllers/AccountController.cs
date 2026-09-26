@@ -16,9 +16,14 @@ namespace Stationery.Controllers
             _signInManager = signInManager;
         }
 
-        public ActionResult Index()
+        public ActionResult Login(string? returnUrl=null)
         {
-            return View();
+            if (User.Identity?.IsAuthenticated == true)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+            ViewData["ReturnUrl"] = returnUrl;
+            return View(new LoginViewModel());
         }
 
     }
