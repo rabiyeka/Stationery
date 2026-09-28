@@ -26,16 +26,36 @@ public static class DbInitializer
     private static async Task SeedUserAsync(UserManager<StationeryUser>userManager, string email, string password, string fullName,string role)
     {
         var user = await userManager.FindByEmailAsync(email);
-        if (user is not null) return;
-        user = new StationeryUser
+        if (user is null)
         {
-            UserName = email,
-            Email = email,
-            FullName = fullName,
-            EmailConfirmed = true
-        };
-        var result = await userManager.CreateAsync(user, password);
-        if (result.Succeeded)
+            user = new StationeryUser
+            {
+                UserName = email,
+                Email = email,
+                FullName = fullName,
+                EmailConfirmed = true
+            };
+
+            var result = await userManager.CreateAsync(user, password);
+            if (!result.Succeeded)
+            {
+                return;
+            }
+        }
+        else
+        {
+            if (!await userManager.CheckPasswordAsync(user, password))
+            {
+                var resetToken = await userManager.GeneratePasswordResetTokenAsync(user);
+                await userManager.ResetPasswordAsync(user, resetToken, password);
+            }
+
+            user.EmailConfirmed = true;
+            user.FullName = fullName;
+            await userManager.UpdateAsync(user);
+        }
+
+        if (!await userManager.IsInRoleAsync(user, role))
         {
             await userManager.AddToRoleAsync(user, role);
         }

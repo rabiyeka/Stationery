@@ -49,6 +49,7 @@
                                     <th>Fiyat</th>
                                     <th class="text-center">Adet</th>
                                     <th class="text-end">Toplam</th>
+                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -64,13 +65,24 @@
                                             </div>
                                         </td>
                                         <td>@item.Price.ToString("C2")</td>
-                                        <td class="text-center">
-                                            <span class="badge bg-light text-dark border px-3 py-2 fs-6 fw-normal">
-                                                @item.Quantity
-                                            </span>
+                                        <td class="text-center" style="width: 130px;">
+                                            <form asp-controller="Carts" asp-action="Update" method="post" class="d-flex align-items-center justify-content-center gap-1">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <input type="number" name="quantity" value="@item.Quantity" min="1" class="form-control form-control-sm text-center rounded-3" onchange="this.form.submit()" />
+                                            </form>
                                         </td>
                                         <td class="text-end fw-bold text-primary">
                                             @item.TotalPrice.ToString("C2")
+                                        </td>
+                                        <td class="text-center">
+                                            <form asp-controller="Carts" asp-action="Remove" method="post">
+                                                @Html.AntiForgeryToken()
+                                                <input type="hidden" name="productId" value="@item.ProductId" />
+                                                <button type="submit" class="btn btn-link text-danger p-0 border-0" title="Sil">
+                                                    <i class="bi bi-trash fs-5"></i>
+                                                </button>
+                                            </form>
                                         </td>
                                     </tr>
                                 }

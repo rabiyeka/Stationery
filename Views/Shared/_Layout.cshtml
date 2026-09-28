@@ -1,5 +1,6 @@
 ﻿@using Stationery.Extensions
 @using Stationery.ViewModels
+@inject Stationery.Services.ICartService CartService
 
 <!DOCTYPE html>
 <html lang="tr">
@@ -41,7 +42,10 @@
                         <!-- SEPETİM BUTONU (Giriş durumundan bağımsız her zaman görünür) -->
                         @{
                             var sessionCart = Context.Session.GetObjectFromJson<List<CartSessionItem>>("Cart");
-                            var totalCount = sessionCart?.Sum(x => x.Quantity) ?? 0;
+                            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+                            var totalCount = userId is not null
+                                ? (await CartService.GetCartAsync(userId)).TotalItemCount
+                                : sessionCart?.Sum(x => x.Quantity) ?? 0;
                         }
                         <li class="nav-item me-2">
                             <a asp-controller="Carts" asp-action="Index" class="btn btn-outline-dark position-relative rounded-pill px-3 py-1 btn-sm">
@@ -58,7 +62,16 @@
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             <li class="nav-item me-2">
-                                <span class="text-dark fw-semibold">Merhaba, @User.Identity.Name</span>
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-person-circle me-1"></i> Hesabım
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Orders"><i class="bi bi-box-seam me-2"></i>Siparişlerim</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Addresses"><i class="bi bi-geo-alt me-2"></i>Adreslerim</a></li>
+                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Membership"><i class="bi bi-person-gear me-2"></i>Üyelik bilgilerim</a></li>
+                                    </ul>
+                                </div>
                             </li>
                             <li class="nav-item">
                                 <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">

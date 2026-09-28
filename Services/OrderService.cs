@@ -39,6 +39,8 @@ public class OrderService : IOrderService
             Id = order.Id,
             OrderDate = order.OrderDate,
             TotalAmount = order.TotalAmount,
+            ShippingAddress = order.ShippingAddress,
+            PaymentMethod = order.PaymentMethod,
             OrderStatus = order.OrderStatus,
             UserId = order.UserId,
             UserName = order.User?.UserName ?? string.Empty,
@@ -74,6 +76,8 @@ public class OrderService : IOrderService
                 Id = o.Id,
                 OrderDate = o.OrderDate,
                 TotalAmount = o.TotalAmount,
+                ShippingAddress = o.ShippingAddress,
+                PaymentMethod = o.PaymentMethod,
                 OrderStatus = o.OrderStatus,
                 UserId = o.UserId,
                 UserName = o.User != null ? o.User.UserName ?? string.Empty : string.Empty,
@@ -118,7 +122,7 @@ public class OrderService : IOrderService
             .ToListAsync();
     }
 
-    public async Task<(bool Success, int? OrderId, string? Error)> CreateOrderAsync(string userId)
+    public async Task<(bool Success, int? OrderId, string? Error)> CreateOrderAsync(string userId, string shippingAddress, string paymentMethod)
     {
         if (string.IsNullOrWhiteSpace(userId))
         {
@@ -160,6 +164,8 @@ public class OrderService : IOrderService
             UserId = userId,
             OrderDate = DateTime.UtcNow,
             TotalAmount = totalAmount,
+            ShippingAddress = shippingAddress,
+            PaymentMethod = paymentMethod,
             OrderStatus = OrderStatus.Pending,
             Items = []
         };

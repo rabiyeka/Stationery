@@ -10,6 +10,8 @@ public class Order
     public StationeryUser? User { get; set; } = null!;
     public DateTime OrderDate { get; set; }
     public decimal TotalAmount { get; set; }
+    public string ShippingAddress { get; set; } = string.Empty;
+    public string PaymentMethod { get; set; } = string.Empty;
     public ICollection<OrderItem> Items { get; set; } = [];
     public OrderStatus OrderStatus { get; set; } = OrderStatus.Pending;
 }

@@ -4,19 +4,33 @@
     ViewData["Title"] = "Kayıt Ol";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5 col-lg-4">
-            <div class="card shadow-sm border-0 rounded-3">
-                <div class="card-body p-4">
+<div class="container auth-shell py-4">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-10 col-lg-9 col-xl-8">
+            <div class="card auth-panel border-0">
+                <div class="row g-0">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="auth-side p-5 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="auth-side-mark mb-4"><i class="bi bi-person-plus-fill"></i></div>
+                                <span class="page-kicker text-white-50">Stationery topluluğu</span>
+                                <h2 class="font-serif mt-2">Masanı kendi ritmine göre kur.</h2>
+                                <p class="text-white-50 mb-0">Seçtiğin araçlar, ürettiğin fikirlere eşlik etsin.</p>
+                            </div>
+                            <span class="small text-white-50">Yeni bir sayfa için iyi bir başlangıç.</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                <div class="card-body p-4 p-md-5">
                     
                     
                     <div class="text-center mb-4">
-                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                        <div class="bg-success text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px;">
                             <i class="bi bi-person-plus-fill fs-4"></i>
                         </div>
-                        <h4 class="fw-bold mb-1">Hesap Oluştur</h4>
-                        <p class="text-muted small">Kırtasiye dünyasına hemen katılın</p>
+                        <span class="page-kicker d-block mb-1">Aramıza katıl</span>
+                        <h4 class="fw-bold mb-1">Hesabını oluştur</h4>
+                        <p class="text-muted small mb-0">Sepetini kaydet, siparişlerini kolayca takip et.</p>
                     </div>
 
                     
@@ -27,43 +41,56 @@
                         
                         <div class="mb-3">
                             <label asp-for="FullName" class="form-label small fw-semibold"></label>
-                            <input asp-for="FullName" class="form-control" placeholder="Ad Soyadınız" />
+                            <input asp-for="FullName" class="form-control" placeholder="Ad Soyadınız" autocomplete="name" />
                             <span asp-validation-for="FullName" class="text-danger small"></span>
                         </div>
 
                         
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label small fw-semibold"></label>
-                            <input asp-for="Email" class="form-control" placeholder="ornek@email.com" />
+                            <input asp-for="Email" class="form-control" placeholder="ornek@email.com" autocomplete="email" />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
                         
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label small fw-semibold"></label>
-                            <input asp-for="Password" class="form-control" placeholder="••••••••" />
+                            <div class="input-group">
+                                <input asp-for="Password" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="Password" title="Şifreyi göster/gizle" aria-label="Şifreyi göster/gizle">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
 
                         
                         <div class="mb-3">
                             <label asp-for="ConfirmPassword" class="form-label small fw-semibold"></label>
-                            <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" />
+                            <div class="input-group">
+                                <input asp-for="ConfirmPassword" class="form-control" placeholder="••••••••" autocomplete="new-password" />
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="ConfirmPassword" title="Şifreyi göster/gizle" aria-label="Şifreyi göster/gizle">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                             <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
                         </div>
 
                         
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-success btn-lg fs-6 fw-semibold">
-                                Kayıt Ol
+                            <button type="submit" class="btn btn-success btn-lg fs-6 fw-semibold rounded-3">
+                                Hesap oluştur <i class="bi bi-arrow-right ms-1"></i>
                             </button>
                         </div>
                     </form>
 
                 </div>
-                <div class="card-footer bg-light border-0 py-3 text-center rounded-bottom">
+                <div class="auth-footer border-0 py-3 text-center">
                     <span class="text-muted small">Zaten hesabınız var mı?</span>
                     <a asp-action="Login" class="text-decoration-none fw-semibold small ms-1">Giriş Yap</a>
+                </div>
+            </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -72,4 +99,60 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        var passwordInput = document.getElementById('Password');
+        var confirmPasswordInput = document.getElementById('ConfirmPassword');
+        var passwordError = document.querySelector('[data-valmsg-for="Password"]');
+        var confirmPasswordError = document.querySelector('[data-valmsg-for="ConfirmPassword"]');
+        var passwordMessage = 'Şifre en az 8 karakter olmalı ve en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.';
+
+        // Şifre kuralları canlı 
+        passwordInput.removeAttribute('data-val-length');
+        passwordInput.removeAttribute('data-val-length-min');
+        passwordInput.removeAttribute('data-val-length-max');
+        passwordInput.removeAttribute('data-val-regex');
+        passwordInput.removeAttribute('data-val-regex-pattern');
+
+        function validatePasswordWhileTyping() {
+            var password = passwordInput.value;
+            var passwordIsValid = password.length >= 8 &&
+                /[a-z]/.test(password) &&
+                /[A-Z]/.test(password) &&
+                /\d/.test(password) &&
+                /[^a-zA-Z\d]/.test(password);
+
+            if (password.length > 0 && !passwordIsValid) {
+                passwordError.textContent = passwordMessage;
+                passwordError.classList.add('field-validation-error');
+                passwordError.classList.remove('field-validation-valid');
+            } else if (passwordIsValid) {
+                passwordError.textContent = '';
+                passwordError.classList.add('field-validation-valid');
+                passwordError.classList.remove('field-validation-error');
+            }
+
+            if (confirmPasswordInput.value.length > 0 && confirmPasswordInput.value !== password) {
+                confirmPasswordError.textContent = 'Şifreler eşleşmiyor.';
+            } else if (confirmPasswordInput.value === password) {
+                confirmPasswordError.textContent = '';
+            }
+        }
+
+        passwordInput.addEventListener('input', validatePasswordWhileTyping);
+        confirmPasswordInput.addEventListener('input', validatePasswordWhileTyping);
+        passwordInput.addEventListener('keyup', validatePasswordWhileTyping);
+        confirmPasswordInput.addEventListener('keyup', validatePasswordWhileTyping);
+
+        document.querySelectorAll('.toggle-password').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = document.getElementById(button.dataset.target);
+                var icon = button.querySelector('i');
+                var isHidden = input.type === 'password';
+
+                input.type = isHidden ? 'text' : 'password';
+                icon.classList.toggle('bi-eye', !isHidden);
+                icon.classList.toggle('bi-eye-slash', isHidden);
+            });
+        });
+    </script>
 }

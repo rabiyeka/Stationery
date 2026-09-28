@@ -4,18 +4,32 @@
     ViewData["Title"] = "Giriş Yap";
 }
 
-<div class="container my-5">
-    <div class="row justify-content-center">
-        <div class="col-md-5 col-lg-4">
-            <div class="card shadow-sm border-0 rounded-3">
-                <div class="card-body p-4">
+<div class="container auth-shell py-4">
+    <div class="row justify-content-center w-100">
+        <div class="col-md-10 col-lg-9 col-xl-8">
+            <div class="card auth-panel border-0">
+                <div class="row g-0">
+                    <div class="col-lg-5 d-none d-lg-flex">
+                        <div class="auth-side p-5 d-flex flex-column justify-content-between">
+                            <div>
+                                <div class="auth-side-mark mb-4"><i class="bi bi-pencil-fill"></i></div>
+                                <span class="page-kicker text-white-50">Stationery hesabı</span>
+                                <h2 class="font-serif mt-2">Fikirlerin için yer aç.</h2>
+                                <p class="text-white-50 mb-0">Günlük notlardan büyük planlara, masanı sana ait kılan parçalar burada.</p>
+                            </div>
+                            <span class="small text-white-50">Daha iyi fikirler, iyi araçlarla başlar.</span>
+                        </div>
+                    </div>
+                    <div class="col-lg-7">
+                <div class="card-body p-4 p-md-5">
                     
                     <div class="text-center mb-4">
-                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 50px; height: 50px;">
+                        <div class="bg-primary text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 54px; height: 54px;">
                             <i class="bi bi-pencil-fill fs-4"></i>
                         </div>
-                        <h4 class="fw-bold mb-1">Hoş Geldiniz</h4>
-                        <p class="text-muted small">Kırtasiye hesabınıza giriş yapın</p>
+                        <span class="page-kicker d-block mb-1">Tekrar hoş geldin</span>
+                        <h4 class="fw-bold mb-1">Hesabına giriş yap</h4>
+                        <p class="text-muted small mb-0">Sepetine ve siparişlerine kaldığın yerden devam et.</p>
                     </div>
 
                     
@@ -27,29 +41,37 @@
                         
                         <div class="mb-3">
                             <label asp-for="Email" class="form-label small fw-semibold">E-Posta Adresi</label>
-                            <input asp-for="Email" class="form-control" placeholder="ornek@email.com" />
+                            <input asp-for="Email" class="form-control" placeholder="ornek@email.com" autocomplete="email" />
                             <span asp-validation-for="Email" class="text-danger small"></span>
                         </div>
 
                        
                         <div class="mb-3">
                             <label asp-for="Password" class="form-label small fw-semibold">Şifre</label>
-                            <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" />
+                            <div class="input-group">
+                                <input asp-for="Password" type="password" class="form-control" placeholder="••••••••" autocomplete="current-password" />
+                                <button type="button" class="btn btn-outline-secondary toggle-password" title="Şifreyi göster/gizle" aria-label="Şifreyi göster/gizle">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            </div>
                             <span asp-validation-for="Password" class="text-danger small"></span>
                         </div>
 
                         
                         <div class="d-grid gap-2 mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg fs-6 fw-semibold">
-                                Giriş Yap
+                            <button type="submit" class="btn btn-primary btn-lg fs-6 fw-semibold rounded-3">
+                                Giriş yap <i class="bi bi-arrow-right ms-1"></i>
                             </button>
                         </div>
                     </form>
 
                 </div>
-                <div class="card-footer bg-light border-0 py-3 text-center rounded-bottom">
+                <div class="auth-footer border-0 py-3 text-center">
                     <span class="text-muted small">Hesabınız yok mu?</span>
                     <a asp-action="Register" class="text-decoration-none fw-semibold small ms-1">Kayıt Ol</a>
+                </div>
+            </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -58,4 +80,17 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.querySelectorAll('.toggle-password').forEach(function (button) {
+            button.addEventListener('click', function () {
+                var input = button.closest('.input-group').querySelector('input');
+                var icon = button.querySelector('i');
+                var isHidden = input.type === 'password';
+
+                input.type = isHidden ? 'text' : 'password';
+                icon.classList.toggle('bi-eye', !isHidden);
+                icon.classList.toggle('bi-eye-slash', isHidden);
+            });
+        });
+    </script>
 }

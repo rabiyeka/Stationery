@@ -14,7 +14,6 @@
         : "Markalar";
 }
 
-<!-- Hover ile Açılan Dropdown ve Kart Animasyon CSS'leri -->
 <style>
     /* Dropdown menünün fareyle üzerine gelindiğinde açılması */
     .dropdown-hover:hover .dropdown-menu {
@@ -24,15 +23,6 @@
     }
     
     /* Ürün kartına hover yapıldığında hafif yukarı kalkma efekti */
-    .product-card {
-        transition: transform 0.25s ease, box-shadow 0.25s ease;
-    }
-
-    .product-card:hover {
-        transform: translateY(-5px);
-        box-shadow: 0 0.75rem 1.5rem rgba(0, 0, 0, 0.1) !important;
-    }
-
     @@keyframes fadeIn {
         from {
             opacity: 0;
@@ -46,7 +36,7 @@
     }
 </style>
 
-<div class="container my-4">
+<div class="container my-5">
 
     <!-- TempData Bildirimleri -->
     @if (TempData["Success"] != null)
@@ -65,10 +55,13 @@
     }
 
     <!-- Üst Filtre Barı (Kategoriler & Markalar Dropdown) -->
-    <div class="d-flex flex-wrap justify-content-between align-items-center bg-white p-3 rounded-4 shadow-sm mb-4 border border-light">
+    <div class="d-flex flex-wrap justify-content-between align-items-center catalog-toolbar p-3 p-lg-4 mb-4">
         
         <div class="d-flex align-items-center gap-2 flex-wrap">
-            <h4 class="fw-bold mb-0 me-3 text-dark">Kırtasiye Ürünleri</h4>
+            <div class="me-3">
+                <span class="page-kicker d-block">Seç, keşfet, üret</span>
+                <h1 class="page-title fw-bold mb-0">Kırtasiye ürünleri</h1>
+            </div>
 
             <!-- Kategoriler Dropdown -->
             <div class="dropdown dropdown-hover">
@@ -139,7 +132,7 @@
 
         <!-- Ürün Sayısı Rozeti -->
         <div class="mt-2 mt-sm-0">
-            <span class="badge bg-light text-dark border px-3 py-2 rounded-pill fs-6 fw-normal">
+            <span class="badge bg-white text-dark border px-3 py-2 rounded-pill fs-6 fw-normal">
                 <strong>@(Model.Products?.Count() ?? 0)</strong> ürün listeleniyor
             </span>
         </div>
@@ -149,7 +142,7 @@
     <!-- Ürün Izgarası -->
     @if (Model.Products == null || !Model.Products.Any())
     {
-        <div class="bg-white rounded-4 shadow-sm text-center py-5 my-4 border">
+        <div class="empty-state bg-white rounded-4 text-center py-5 my-4">
             <i class="bi bi-box-seam display-1 text-muted mb-3 d-block"></i>
             <h5 class="fw-bold text-dark">Ürün Bulunamadı</h5>
             <p class="text-muted mb-3">Seçilen kriterlere ait gösterilecek ürün bulunmamaktadır.</p>
@@ -162,15 +155,15 @@
             @foreach (var product in Model.Products)
             {
                 <div class="col">
-                    <div class="card h-100 border-0 shadow-sm rounded-4 overflow-hidden product-card bg-white">
+                    <div class="card h-100 border-0 product-card bg-white">
                     
                         <!-- Görsel ve Kategori Etiketi -->
-                        <div class="position-relative bg-light text-center p-3">
-                            <span class="badge bg-white text-dark shadow-sm position-absolute top-0 start-0 m-3 rounded-pill px-2 py-1 small">
+                        <div class="position-relative product-image-wrap text-center p-3">
+                            <span class="badge bg-white text-dark position-absolute top-0 start-0 m-3 rounded-pill px-2 py-1 small">
                                 @product.CategoryName
                             </span>
-                            <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://via.placeholder.com/300x220?text=Kirtasiye" : product.ImageUrl)"
-                                 class="img-fluid object-fit-contain" alt="@product.Name" style="height: 190px;">
+                               <img src="@(string.IsNullOrEmpty(product.ImageUrl) ? "https://via.placeholder.com/300x220?text=Kirtasiye" : product.ImageUrl)"
+                                   class="img-fluid object-fit-contain" alt="@product.Name" style="height: 190px;">
                         </div>
 
                         <!-- Ürün İçeriği -->
@@ -182,7 +175,7 @@
                             <div class="mt-auto pt-2">
                                 <div class="d-flex align-items-baseline justify-content-between mb-3">
                                     <span class="text-muted small">Fiyat</span>
-                                    <span class="fs-5 fw-bold text-primary">@product.Price.ToString("C2")</span>
+                                    <span class="product-price">@product.Price.ToString("C2")</span>
                                 </div>
 
                                 <!-- Aksiyon Butonları -->

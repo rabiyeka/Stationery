@@ -44,7 +44,7 @@ namespace Stationery.Controllers
         [Authorize]
         public async Task<IActionResult> AddToCart(int productId, int quantity = 1, string? returnUrl = null)
         {
-            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
+            var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value; //login olan kullanıcının idsi
             if(string.IsNullOrEmpty(userId))
             {
                 return NotFound();

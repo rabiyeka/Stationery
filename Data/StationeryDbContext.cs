@@ -17,6 +17,7 @@ public class StationeryDbContext : IdentityDbContext<StationeryUser>
     public DbSet<CartItem> CartItems => Set<CartItem>();
     public DbSet<Order> Orders => Set<Order>();
     public DbSet<OrderItem> OrderItems => Set<OrderItem>();
+    public DbSet<Address> Addresses => Set<Address>();
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -78,6 +79,12 @@ public class StationeryDbContext : IdentityDbContext<StationeryUser>
             .WithMany()
             .HasForeignKey(o => o.UserId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Entity<Address>()
+            .HasOne(a => a.User)
+            .WithMany()
+            .HasForeignKey(a => a.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
 
         builder.Entity<Order>()
             .Property(o => o.TotalAmount)

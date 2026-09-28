@@ -1,0 +1,75 @@
+@model Stationery.ViewModels.Account.AddressesViewModel
+
+@{
+    ViewData["Title"] = "Adreslerim";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Adreslerim</h2>
+            <p class="text-muted mb-0">Teslimat adreslerinizi yönetin.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Hesabıma dön</a>
+    </div>
+
+    @if (TempData["Success"] is not null)
+    {
+        <div class="alert alert-success">@TempData["Success"]</div>
+    }
+
+    <div class="row g-4">
+        <div class="col-lg-7">
+            <div class="row g-3">
+                @if (Model.Items.Count == 0)
+                {
+                    <div class="col-12"><div class="alert alert-info rounded-4">Kayıtlı adresiniz bulunmuyor.</div></div>
+                }
+                @foreach (var address in Model.Items)
+                {
+                    <div class="col-md-6">
+                        <div class="card border-0 shadow-sm rounded-4 h-100">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start mb-2">
+                                    <h5 class="fw-bold">@address.Title</h5>
+                                    <form asp-action="DeleteAddress" method="post">
+                                        @Html.AntiForgeryToken()
+                                        <input type="hidden" name="id" value="@address.Id" />
+                                        <button class="btn btn-link text-danger p-0" title="Adresi sil"><i class="bi bi-trash"></i></button>
+                                    </form>
+                                </div>
+                                <p class="mb-1">@address.FullName</p>
+                                <p class="text-muted small mb-1">@address.Phone</p>
+                                <p class="text-muted small mb-0">@address.Detail, @address.Neighborhood, @address.District / @address.City</p>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+        <div class="col-lg-5">
+            <div class="card border-0 shadow-sm rounded-4">
+                <div class="card-body p-4">
+                    <h5 class="fw-bold mb-3">Yeni adres ekle</h5>
+                    <form asp-action="Addresses" method="post">
+                        @Html.AntiForgeryToken()
+                        <div asp-validation-summary="ModelOnly" class="text-danger small"></div>
+                        <div class="mb-2"><label asp-for="Form.Title" class="form-label">Adres başlığı</label><input asp-for="Form.Title" class="form-control" /><span asp-validation-for="Form.Title" class="text-danger small"></span></div>
+                        <div class="mb-2"><label asp-for="Form.FullName" class="form-label">Ad soyad</label><input asp-for="Form.FullName" class="form-control" /><span asp-validation-for="Form.FullName" class="text-danger small"></span></div>
+                        <div class="mb-2"><label asp-for="Form.Phone" class="form-label">Telefon</label><input asp-for="Form.Phone" class="form-control" /><span asp-validation-for="Form.Phone" class="text-danger small"></span></div>
+                        <div class="row g-2">
+                            <div class="col-6 mb-2"><label asp-for="Form.City" class="form-label">İl</label><input asp-for="Form.City" class="form-control" /></div>
+                            <div class="col-6 mb-2"><label asp-for="Form.District" class="form-label">İlçe</label><input asp-for="Form.District" class="form-control" /></div>
+                        </div>
+                        <div class="mb-2"><label asp-for="Form.Neighborhood" class="form-label">Mahalle</label><input asp-for="Form.Neighborhood" class="form-control" /></div>
+                        <div class="mb-2"><label asp-for="Form.Detail" class="form-label">Açık adres</label><textarea asp-for="Form.Detail" class="form-control" rows="2"></textarea></div>
+                        <div class="mb-3"><label asp-for="Form.PostalCode" class="form-label">Posta kodu</label><input asp-for="Form.PostalCode" class="form-control" /></div>
+                        <button class="btn btn-primary w-100 rounded-pill" type="submit">Adresi kaydet</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }

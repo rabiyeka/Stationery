@@ -1,0 +1,56 @@
+@model IList<Stationery.ViewModels.Orders.OrderDetailsViewModel>
+
+@{
+    ViewData["Title"] = "Siparişlerim";
+}
+
+<div class="container my-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-1">Siparişlerim</h2>
+            <p class="text-muted mb-0">Geçmiş ve aktif siparişleriniz.</p>
+        </div>
+        <a asp-action="Index" class="btn btn-outline-secondary rounded-pill">Hesabıma dön</a>
+    </div>
+
+    @if (Model.Count == 0)
+    {
+        <div class="alert alert-info rounded-4">Henüz bir siparişiniz bulunmuyor.</div>
+    }
+    else
+    {
+        <div class="row g-4">
+            @foreach (var order in Model)
+            {
+                var status = order.OrderStatus switch
+                {
+                    Stationery.Models.Enums.OrderStatus.Pending => "Beklemede",
+                    Stationery.Models.Enums.OrderStatus.Preparing => "Hazırlanıyor",
+                    Stationery.Models.Enums.OrderStatus.Shipped => "Kargoda",
+                    Stationery.Models.Enums.OrderStatus.Delivered => "Teslim edildi",
+                    Stationery.Models.Enums.OrderStatus.Cancelled => "İptal edildi",
+                    _ => "Bilinmiyor"
+                };
+                <div class="col-lg-6">
+                    <div class="card border-0 shadow-sm rounded-4 h-100">
+                        <div class="card-body p-4">
+                            <div class="d-flex justify-content-between mb-3">
+                                <div>
+                                    <span class="text-muted small d-block">Sipariş no</span>
+                                    <strong>#@order.Id</strong>
+                                </div>
+                                <span class="badge bg-primary-subtle text-primary align-self-start">@status</span>
+                            </div>
+                            <p class="text-muted small">@order.OrderDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
+                            <p class="mb-3">@order.Items.Sum(i => i.Quantity) ürün</p>
+                            <div class="d-flex justify-content-between border-top pt-3">
+                                <span class="fw-bold">Toplam</span>
+                                <span class="fw-bold text-primary">@order.TotalAmount.ToString("C2")</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>

@@ -1,0 +1,84 @@
+@model Stationery.ViewModels.Orders.CheckoutViewModel
+
+@{
+    ViewData["Title"] = "Siparişi Tamamla";
+}
+
+<div class="container my-5">
+    <div class="mb-4">
+        <h2 class="fw-bold mb-1">Siparişi tamamla</h2>
+        <p class="text-muted mb-0">Teslimat adresinizi ve ödeme yönteminizi seçerek siparişinizi oluşturun.</p>
+    </div>
+
+    @if (Model.Addresses.Count == 0)
+    {
+        <div class="alert alert-warning rounded-4">
+            <strong>Teslimat adresi gerekli.</strong> Sipariş vermeden önce bir adres ekleyin.
+            <a asp-controller="Account" asp-action="Addresses" class="alert-link">Adreslerime git</a>
+        </div>
+    }
+
+    <form asp-action="Checkout" method="post">
+        @Html.AntiForgeryToken()
+        <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+        <div class="row g-4">
+            <div class="col-lg-7">
+                <div class="card border-0 shadow-sm rounded-4 mb-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">1. Teslimat adresi</h5>
+                        @foreach (var address in Model.Addresses)
+                        {
+                            <label class="border rounded-3 p-3 mb-2 d-flex gap-3 align-items-start">
+                                <input class="form-check-input mt-1" type="radio" asp-for="AddressId" value="@address.Id" />
+                                <span>
+                                    <strong class="d-block">@address.Title</strong>
+                                    <span class="text-muted small">@address.FullName, @address.Phone</span>
+                                    <span class="text-muted small d-block">@address.Detail, @address.Neighborhood, @address.District / @address.City</span>
+                                </span>
+                            </label>
+                        }
+                        <span asp-validation-for="AddressId" class="text-danger small"></span>
+                    </div>
+                </div>
+
+                <div class="card border-0 shadow-sm rounded-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3">2. Ödeme yöntemi</h5>
+                        <div class="form-check border rounded-3 p-3 ps-5 mb-2">
+                            <input class="form-check-input" type="radio" asp-for="PaymentMethod" value="Kapıda ödeme" id="cashPayment" />
+                            <label class="form-check-label" for="cashPayment"><i class="bi bi-cash-coin me-2"></i>Kapıda ödeme</label>
+                        </div>
+                        <div class="form-check border rounded-3 p-3 ps-5">
+                            <input class="form-check-input" type="radio" asp-for="PaymentMethod" value="Kredi kartı" id="cardPayment" />
+                            <label class="form-check-label" for="cardPayment"><i class="bi bi-credit-card me-2"></i>Kredi kartı</label>
+                        </div>
+                        <span asp-validation-for="PaymentMethod" class="text-danger small"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-5">
+                <div class="card border-0 shadow-sm rounded-4 p-4 position-sticky" style="top: 1rem;">
+                    <h5 class="fw-bold mb-3">3. Sipariş özeti</h5>
+                    @foreach (var item in Model.Cart.Items)
+                    {
+                        <div class="d-flex justify-content-between gap-3 mb-2 small">
+                            <span>@item.ProductName x @item.Quantity</span>
+                            <strong>@item.LineTotal.ToString("C2")</strong>
+                        </div>
+                    }
+                    <hr />
+                    <div class="d-flex justify-content-between fs-5 fw-bold mb-4">
+                        <span>Genel toplam</span>
+                        <span class="text-primary">@Model.Cart.TotalAmount.ToString("C2")</span>
+                    </div>
+                    <button type="submit" class="btn btn-success btn-lg w-100 rounded-pill" @(Model.Addresses.Count == 0 ? "disabled" : null)>
+                        <i class="bi bi-check2-circle me-1"></i> Siparişi onayla
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts { <partial name="_ValidationScriptsPartial" /> }
