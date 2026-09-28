@@ -4,6 +4,7 @@ using Stationery.Models;
 using Stationery.Models.Enums;
 using Stationery.Repositories;
 using Stationery.ViewModels.Orders;
+using Stationery.ViewModels.Admin;
 
 namespace Stationery.Services;
 
@@ -58,6 +59,23 @@ public class OrderService : IOrderService
         };
     }
 
+    public async Task<IList<AdminOrderSummaryViewModel>> GetAllOrdersForAdminAsync()
+    {
+        return await _unitOfWork
+            .Orders
+            .Query()
+            .Include(o=>o.User)
+            .OrderByDescending(o=>o.OrderDate)
+            .Select(o=>new AdminOrderSummaryViewModel
+            {
+                Id=o.Id,
+                OrderDate=o.OrderDate,
+                Status=o.OrderStatus.ToString(),
+                TotalAmount=o.TotalAmount,
+                ItemCount=o.Items.Sum(i=>i.Quantity),
+                CustomerEmail = o.User!.Email ?? string.Empty
+            }).ToListAsync();
+    }
     public async Task<IList<OrderDetailsViewModel>> GetOrdersForUserAsync(string userId)
     {
         if (string.IsNullOrWhiteSpace(userId))
@@ -94,6 +112,22 @@ public class OrderService : IOrderService
             .ToListAsync();
     }
 
+    public async Task<IList<OrderSummaryItemViewModel>> GetMyOrdersAsync(string userId)
+    {
+        return await _unitOfWork
+                .Orders
+                .Query()
+                .Where(o=>o.UserId==userId)
+                .OrderByDescending(o => o.OrderDate)
+                .Select(o => new OrderSummaryItemViewModel
+                {
+                    Id = o.Id,
+                    OrderDate = o.OrderDate,
+                    Status = o.OrderStatus.ToString(),
+                    TotalAmount = o.TotalAmount,
+                    ItemCount = o.Items.Sum(i => i.Quantity)
+                }).ToListAsync();
+    }
     public async Task<IList<OrderDetailsViewModel>> GetOrdersForAdminAsync()
     {
         return await _unitOfWork.Orders.Query()
@@ -143,7 +177,7 @@ public class OrderService : IOrderService
         {
             if (cartItem.Product is null)
             {
-                return (false, null, "Sepette geçersiz ürünler bulundu.");
+                return (false, null, $"Id:{cartItem.ProductId} id'li ürün bulunamadı.");
             }
 
             if (cartItem.Quantity <= 0)

@@ -25,6 +25,7 @@
     <Folder Include="ViewModels/Brands/" />
     <Folder Include="ViewModels/Carts/" />
     <Folder Include="ViewModels/Products/" />
+    <Folder Include="wwwroot/images/" />
   </ItemGroup>
 
 </Project>

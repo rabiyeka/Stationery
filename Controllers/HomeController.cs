@@ -1,14 +1,23 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Stationery.Models;
+using Stationery.Services;
 
 namespace Stationery.Controllers;
 
 public class HomeController : Controller
 {
-    public IActionResult Index()
+    private readonly IProductService _productService;
+
+    public HomeController(IProductService productService)
     {
-        return View();
+        _productService = productService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var products = await _productService.GetAllProductsAsync();
+        return View(products.Take(4).ToList());
     }
 
     public IActionResult Privacy()

@@ -220,7 +220,7 @@ namespace Stationery.Controllers
             {
                 return RedirectToAction("Index", "Home");
             }
-            return View();
+            return View(new RegisterViewModel());
         }
 
         [HttpPost]

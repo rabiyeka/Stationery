@@ -37,6 +37,9 @@ builder.Services.AddScoped<IBrandService, BrandService>();
 builder.Services.AddScoped<IProductService, ProductService>();
 builder.Services.AddScoped<ICartService, CartService>();
 builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IUserAdminService, UserAdminService>();
+
+
 var app = builder.Build();
 using (var scope = app.Services.CreateAsyncScope())
 {

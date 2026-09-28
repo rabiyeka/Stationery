@@ -197,3 +197,339 @@ body {
   font-family: Georgia, "Times New Roman", serif;
   letter-spacing: 0;
 }
+
+.account-action-icon {
+  color: var(--coral-dark);
+}
+
+.home-page {
+  padding: .5rem 0 3rem;
+  animation: home-rise .55s ease-out both;
+}
+
+.home-hero {
+  min-height: 390px;
+  display: grid;
+  grid-template-columns: 1.05fr .95fr;
+  overflow: hidden;
+  background: var(--mist);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+
+.home-hero-copy {
+  align-self: center;
+  padding: 3rem clamp(1.5rem, 5vw, 4.5rem);
+}
+
+.home-hero-copy h1 {
+  max-width: 540px;
+  margin: .8rem 0 1rem;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 3.35rem;
+  font-weight: 700;
+  line-height: 1.08;
+}
+
+.home-hero-copy h1 span {
+  color: var(--coral-dark);
+}
+
+.home-hero-copy p {
+  max-width: 430px;
+  margin-bottom: 1.5rem;
+  color: var(--ink-soft);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+.home-hero-actions {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 1.25rem;
+}
+
+.home-shop-button {
+  padding: .8rem 1.2rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.home-hero-actions > span {
+  color: var(--ink-soft);
+  font-size: .88rem;
+}
+
+.home-hero-actions > span i {
+  margin-right: .35rem;
+  color: var(--coral-dark);
+}
+
+.home-hero-art {
+  position: relative;
+  display: grid;
+  min-height: 330px;
+  place-items: center;
+  overflow: hidden;
+  background-color: #f2e5d8;
+  background-image: repeating-linear-gradient(135deg, transparent 0 22px, rgba(22, 43, 58, .035) 22px 23px);
+}
+
+.home-hero-art > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.home-art-placeholder {
+  display: grid;
+  place-items: center;
+  color: var(--coral-dark);
+}
+
+.home-art-placeholder i {
+  font-size: 7rem;
+}
+
+.home-benefits {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  border-bottom: 1px solid var(--line);
+}
+
+.home-benefits > div {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  padding: 1rem .5rem;
+  color: var(--ink-soft);
+  font-size: .88rem;
+  font-weight: 700;
+}
+
+.home-benefits > div + div {
+  border-left: 1px solid var(--line);
+}
+
+.home-benefits i {
+  color: var(--coral-dark);
+  font-size: 1.15rem;
+}
+
+.home-featured {
+  padding-top: 2.75rem;
+}
+
+.home-section-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.25rem;
+}
+
+.home-section-heading h2 {
+  margin: .35rem 0 0;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.home-all-products {
+  flex: 0 0 auto;
+  padding-bottom: .2rem;
+  color: var(--coral-dark);
+  font-size: .9rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.home-all-products:hover {
+  color: var(--ink);
+}
+
+.home-product-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1rem;
+}
+
+.home-product {
+  min-width: 0;
+  overflow: hidden;
+  color: inherit;
+  background: rgba(255, 255, 255, .88);
+  border: 1px solid var(--line);
+  text-decoration: none;
+  transition: transform .2s ease, box-shadow .2s ease;
+}
+
+.home-product:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(22, 43, 58, .1);
+}
+
+.home-product-image {
+  position: relative;
+  display: grid;
+  height: 185px;
+  place-items: center;
+  overflow: hidden;
+  background: var(--mist);
+  border-bottom: 1px solid var(--line);
+}
+
+.home-product-image img {
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  object-fit: contain;
+  mix-blend-mode: multiply;
+  transition: transform .25s ease;
+}
+
+.home-product:hover .home-product-image img {
+  transform: scale(1.04);
+}
+
+.home-product-image > i {
+  color: var(--coral-dark);
+  font-size: 3.5rem;
+}
+
+.home-product-image > span {
+  position: absolute;
+  top: .7rem;
+  left: .7rem;
+  max-width: calc(100% - 1.4rem);
+  overflow: hidden;
+  padding: .3rem .55rem;
+  color: var(--ink);
+  background: rgba(255, 255, 255, .92);
+  font-size: .7rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-product-info {
+  padding: .9rem 1rem 1rem;
+}
+
+.home-product-info h3 {
+  overflow: hidden;
+  margin: .35rem 0 .65rem;
+  color: var(--ink);
+  font-size: .95rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.home-product-info > strong {
+  color: var(--coral-dark);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+}
+
+.home-empty-state {
+  display: grid;
+  justify-items: center;
+  gap: .5rem;
+  padding: 2.5rem 1rem;
+  color: var(--ink-soft);
+  background: rgba(255, 255, 255, .7);
+  border: 1px dashed var(--line);
+}
+
+.home-empty-state i {
+  color: var(--coral-dark);
+  font-size: 2rem;
+}
+
+.home-empty-state p {
+  margin: 0;
+}
+
+@keyframes home-rise {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 767.98px) {
+  .home-hero {
+    grid-template-columns: 1fr;
+  }
+
+  .home-hero-copy {
+    padding: 2.3rem 1.4rem;
+  }
+
+  .home-hero-copy h1 {
+    font-size: 2.65rem;
+  }
+
+  .home-hero-art {
+    min-height: 270px;
+    max-height: 330px;
+  }
+
+  .home-benefits > div {
+    flex-direction: column;
+    gap: .35rem;
+    text-align: center;
+    font-size: .75rem;
+  }
+
+  .home-featured {
+    padding-top: 2rem;
+  }
+
+  .home-section-heading h2 {
+    font-size: 1.6rem;
+  }
+
+  .home-product-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: .7rem;
+  }
+
+  .home-product-image {
+    height: 150px;
+  }
+
+  .home-product-info {
+    padding: .75rem;
+  }
+}
+
+@media (max-width: 420px) {
+  .home-section-heading {
+    align-items: start;
+    flex-direction: column;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-page {
+    animation: none;
+  }
+
+  .home-product,
+  .home-product-image img {
+    transition: none;
+  }
+}
+
+.home-product-brand {
+  color: var(--coral-dark);
+  font-size: .7rem;
+  font-weight: 800;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}

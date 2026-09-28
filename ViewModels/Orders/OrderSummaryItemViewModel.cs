@@ -4,9 +4,9 @@ namespace Stationery.ViewModels.Orders;
 
 public class OrderSummaryItemViewModel
 {
-    public int ProductId { get; set; }
-    public string ProductName { get; set; } = null!;
-    public int Quantity { get; set; }
-    public decimal UnitPrice { get; set; }
-    public decimal LineTotal => Quantity * UnitPrice;
+    public int Id { get; set; }
+    public DateTime OrderDate { get; set; }
+    public string Status { get; set; } = string.Empty;
+    public decimal TotalAmount { get; set; }
+    public int ItemCount { get; set; }
 }

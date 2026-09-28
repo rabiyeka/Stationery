@@ -1,4 +1,82 @@
-﻿@{
-    ViewData["Title"] = "Anasayfa";
+﻿@model IList<ProductListViewModel>
+
+@{
+    ViewData["Title"] = "Ana Sayfa";
 }
+
+<div class="home-page">
+    <section class="home-hero" aria-labelledby="home-title">
+        <div class="home-hero-copy">
+            <span class="page-kicker">Fikirlerin için güzel başlangıçlar</span>
+            <h1 id="home-title">Masanı kur.<br /><span>Hayal ettiğini</span> yaz.</h1>
+            <p>Notlarından çizimlerine, her gün kullandığın kırtasiye ürünlerini özenle seçtik.</p>
+            <div class="home-hero-actions">
+                <a asp-controller="Products" asp-action="Index" class="btn btn-primary home-shop-button">
+                    Ürünleri keşfet <i class="bi bi-arrow-right ms-2"></i>
+                </a>
+                <span><i class="bi bi-pencil-fill"></i> Yaz, çiz, üret</span>
+            </div>
+        </div>
+
+        <div class="home-hero-art" aria-label="Kırtasiye ve çalışma masası görseli">
+            <div class="home-art-placeholder" aria-hidden="true">
+                <i class="bi bi-journal-richtext"></i>
+            </div>
+            <img src="~/images/anasayfa.jpeg" alt="Renkli kırtasiye ürünleri ve çalışma masası"
+                 onerror="this.remove();" />
+        </div>
+    </section>
+
+    <section class="home-benefits" aria-label="Alışveriş avantajları">
+        <div><i class="bi bi-box-seam"></i><span>Özenli paketleme</span></div>
+        <div><i class="bi bi-credit-card"></i><span>Güvenli ödeme</span></div>
+        <div><i class="bi bi-bookmark-heart"></i><span>Seçilmiş ürünler</span></div>
+    </section>
+
+    <section class="home-featured" aria-labelledby="featured-title">
+        <div class="home-section-heading">
+            <div>
+                <span class="page-kicker">Kırtasiye seçkisi</span>
+                <h2 id="featured-title">Masana iyi gelecekler</h2>
+            </div>
+            <a asp-controller="Products" asp-action="Index" class="home-all-products">
+                Tüm ürünler <i class="bi bi-arrow-up-right"></i>
+            </a>
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="home-empty-state">
+                <i class="bi bi-box-seam"></i>
+                <p>Ürünlerimiz yakında burada olacak.</p>
+            </div>
+        }
+        else
+        {
+            <div class="home-product-grid">
+                @foreach (var product in Model)
+                {
+                    <a asp-controller="Products" asp-action="Details" asp-route-id="@product.Id" class="home-product">
+                        <div class="home-product-image">
+                            @if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+                            {
+                                <img src="@product.ImageUrl" alt="@product.Name" loading="lazy" />
+                            }
+                            else
+                            {
+                                <i class="bi bi-journal-richtext" aria-hidden="true"></i>
+                            }
+                            <span>@product.CategoryName</span>
+                        </div>
+                        <div class="home-product-info">
+                            <span class="home-product-brand">@product.BrandName</span>
+                            <h3>@product.Name</h3>
+                            <strong>@product.Price.ToString("C2")</strong>
+                        </div>
+                    </a>
+                }
+            </div>
+        }
+    </section>
+</div>
 

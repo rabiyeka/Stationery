@@ -18,9 +18,30 @@
                     <form asp-action="Membership" method="post">
                         @Html.AntiForgeryToken()
                         <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
-                        <div class="mb-3"><label asp-for="CurrentPassword" class="form-label"></label><input asp-for="CurrentPassword" class="form-control" /><span asp-validation-for="CurrentPassword" class="text-danger small"></span></div>
-                        <div class="mb-3"><label asp-for="NewPassword" class="form-label"></label><input asp-for="NewPassword" class="form-control" /><span asp-validation-for="NewPassword" class="text-danger small"></span></div>
-                        <div class="mb-4"><label asp-for="ConfirmPassword" class="form-label"></label><input asp-for="ConfirmPassword" class="form-control" /><span asp-validation-for="ConfirmPassword" class="text-danger small"></span></div>
+                        <div class="mb-3">
+                            <label asp-for="CurrentPassword" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="CurrentPassword" class="form-control" autocomplete="current-password" />
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="CurrentPassword" title="Şifreyi göster" aria-label="Şifreyi göster"><i class="bi bi-eye"></i></button>
+                            </div>
+                            <span asp-validation-for="CurrentPassword" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-3">
+                            <label asp-for="NewPassword" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="NewPassword" class="form-control" autocomplete="new-password" />
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="NewPassword" title="Şifreyi göster" aria-label="Şifreyi göster"><i class="bi bi-eye"></i></button>
+                            </div>
+                            <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                        </div>
+                        <div class="mb-4">
+                            <label asp-for="ConfirmPassword" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="ConfirmPassword" class="form-control" autocomplete="new-password" />
+                                <button type="button" class="btn btn-outline-secondary toggle-password" data-target="ConfirmPassword" title="Şifreyi göster" aria-label="Şifreyi göster"><i class="bi bi-eye"></i></button>
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
                         <button class="btn btn-primary rounded-pill px-4" type="submit">Şifreyi güncelle</button>
                     </form>
                 </div>
@@ -29,4 +50,58 @@
     </div>
 </div>
 
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        const newPasswordInput = document.getElementById('NewPassword');
+        const confirmPasswordInput = document.getElementById('ConfirmPassword');
+        const newPasswordError = document.querySelector('[data-valmsg-for="NewPassword"]');
+        const confirmPasswordError = document.querySelector('[data-valmsg-for="ConfirmPassword"]');
+        const passwordMessage = 'Şifre en az 8 karakter olmalı ve en az bir büyük harf, bir küçük harf, bir rakam ve bir özel karakter içermelidir.';
+
+        function setValidationMessage(element, message) {
+            element.textContent = message;
+            element.classList.toggle('field-validation-error', message.length > 0);
+            element.classList.toggle('field-validation-valid', message.length === 0);
+        }
+
+        function validateNewPassword() {
+            const password = newPasswordInput.value;
+            const passwordIsValid = password.length >= 8 &&
+                /[a-z]/.test(password) &&
+                /[A-Z]/.test(password) &&
+                /\d/.test(password) &&
+                /[^a-zA-Z\d]/.test(password);
+
+            if (password.length > 0 && !passwordIsValid) {
+                setValidationMessage(newPasswordError, passwordMessage);
+            } else {
+                setValidationMessage(newPasswordError, '');
+            }
+
+            if (confirmPasswordInput.value.length > 0 && confirmPasswordInput.value !== password) {
+                setValidationMessage(confirmPasswordError, 'Şifreler eşleşmiyor.');
+            } else {
+                setValidationMessage(confirmPasswordError, '');
+            }
+        }
+
+        newPasswordInput.addEventListener('input', validateNewPassword);
+        confirmPasswordInput.addEventListener('input', validateNewPassword);
+
+        document.querySelectorAll('.toggle-password').forEach(function (button) {
+            button.addEventListener('click', function () {
+                const input = document.getElementById(button.dataset.target);
+                const icon = button.querySelector('i');
+                const isHidden = input.type === 'password';
+                const label = isHidden ? 'Şifreyi gizle' : 'Şifreyi göster';
+
+                input.type = isHidden ? 'text' : 'password';
+                icon.classList.toggle('bi-eye', !isHidden);
+                icon.classList.toggle('bi-eye-slash', isHidden);
+                button.setAttribute('aria-label', label);
+                button.title = label;
+            });
+        });
+    </script>
+}

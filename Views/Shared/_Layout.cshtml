@@ -1,6 +1,7 @@
 ﻿@using Stationery.Extensions
 @using Stationery.ViewModels
 @inject Stationery.Services.ICartService CartService
+@inject Microsoft.AspNetCore.Identity.UserManager<Stationery.Models.StationeryUser> UserManager
 
 <!DOCTYPE html>
 <html lang="tr">
@@ -61,10 +62,12 @@
 
                         @if (User.Identity?.IsAuthenticated == true)
                         {
+                            var currentUser = await UserManager.GetUserAsync(User);
+                            var displayName = string.IsNullOrWhiteSpace(currentUser?.FullName) ? "Hesabım" : currentUser.FullName;
                             <li class="nav-item me-2">
                                 <div class="dropdown">
                                     <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-person-circle me-1"></i> Hesabım
+                                        <i class="bi bi-person-circle me-1"></i> @displayName
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
                                         <li><a class="dropdown-item" asp-controller="Account" asp-action="Orders"><i class="bi bi-box-seam me-2"></i>Siparişlerim</a></li>
