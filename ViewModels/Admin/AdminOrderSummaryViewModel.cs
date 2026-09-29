@@ -10,5 +10,6 @@ public class AdminOrderSummaryViewModel
     public decimal TotalAmount { get; set; }
     public int ItemCount { get; set; }
     public string CustomerEmail { get; set; } = null!;
+    public string ShippingAddress { get; set; } = string.Empty;
 
 }

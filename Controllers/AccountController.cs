@@ -167,13 +167,13 @@ namespace Stationery.Controllers
                 return View(model);
             }
             var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user is not null && await _userManager.IsInRoleAsync(user, "Admin"))
+            {
+                return RedirectToAction("Index", "Home", new { area = "" });
+            }
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
-            }
-            if (user is not null && await _userManager.IsInRoleAsync(user, "Admin"))
-            {
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
             }
             return RedirectToAction("Index", "Home");
         }

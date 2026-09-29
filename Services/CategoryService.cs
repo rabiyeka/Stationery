@@ -18,16 +18,16 @@ public class CategoryService : ICategoryService
 
     public async Task<(bool Success, string? Error)> CreateCategoryAsync(string name, string? description)
     {
-        var category = await _unitOfWork .Categories.Query()
-            .Where(c => c.Name.ToLower() == c.Name)
-            .FirstOrDefaultAsync();
-        if (category is not null) 
+        var normalizedName = name.Trim();
+        var categoryExists = await _unitOfWork.Categories.Query()
+            .AnyAsync(c => c.Name.ToLower() == normalizedName.ToLower());
+        if (categoryExists)
         {
             return (false, "Bu isimde bir kategori zaten mevcut.");
         }
         await _unitOfWork.Categories.AddAsync(new Category {
-            Name= name.Trim(),
-            Description= description?.Trim()!
+            Name= normalizedName,
+            Description= description?.Trim() ?? string.Empty
         });
         await _unitOfWork.SaveChangesAsync();
         return (true, null);
@@ -68,7 +68,8 @@ public class CategoryService : ICategoryService
             .Select(c=> new AdminCategoryListViewModel
             {
                 Id = c.Id,
-                Name = c.Name
+                Name = c.Name,
+                ProductCount = c.Products.Count
             })
             .OrderBy(c=> c.Name)
             .ToListAsync();
@@ -91,7 +92,7 @@ public class CategoryService : ICategoryService
         var category= await _unitOfWork.Categories.GetByIdAsync(id);
         if(category is null) return (false, "Kategori bulunamadı.");
         category.Name= name;
-        category.Description= description?.Trim()!;
+        category.Description= description?.Trim() ?? string.Empty;
         _unitOfWork.Categories.Update(category);
         await _unitOfWork.SaveChangesAsync();
         return (true, null);

@@ -1,6 +1,64 @@
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Yönetim paneli";
 }
 
+<div class="container py-4">
+    <div class="mb-4">
+        <span class="page-kicker">Admin</span>
+        <h1 class="h2 fw-bold mb-1">Yönetim paneli</h1>
+        <p class="text-muted mb-0">Yönetmek istediğiniz bölümü seçin.</p>
+    </div>
 
-<h1>Admin Ana Sayfa</h1>
+    <div class="row g-3">
+        <div class="col-12 col-md-6">
+            <a asp-area="Admin" asp-controller="Categories" asp-action="Index" class="d-flex align-items-center gap-3 h-100 p-3 border rounded text-decoration-none text-body">
+                <i class="bi bi-tags fs-3 text-primary" aria-hidden="true"></i>
+                <span>
+                    <span class="d-block fw-semibold">Kategoriler</span>
+                    <span class="d-block small text-muted">Kategorileri oluşturun ve düzenleyin.</span>
+                </span>
+                <i class="bi bi-chevron-right ms-auto text-muted" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-12 col-md-6">
+            <a asp-area="Admin" asp-controller="Brands" asp-action="Index" class="d-flex align-items-center gap-3 h-100 p-3 border rounded text-decoration-none text-body">
+                <i class="bi bi-bookmark fs-3 text-primary" aria-hidden="true"></i>
+                <span>
+                    <span class="d-block fw-semibold">Markalar</span>
+                    <span class="d-block small text-muted">Ürün markalarını ekleyin.</span>
+                </span>
+                <i class="bi bi-chevron-right ms-auto text-muted" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-12 col-md-6">
+            <a asp-area="Admin" asp-controller="Products" asp-action="Index" class="d-flex align-items-center gap-3 h-100 p-3 border rounded text-decoration-none text-body">
+                <i class="bi bi-box-seam fs-3 text-primary" aria-hidden="true"></i>
+                <span>
+                    <span class="d-block fw-semibold">Ürünler</span>
+                    <span class="d-block small text-muted">Ürün, stok, fiyat ve görselleri yönetin.</span>
+                </span>
+                <i class="bi bi-chevron-right ms-auto text-muted" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-12 col-md-6">
+            <a asp-area="Admin" asp-controller="Orders" asp-action="Index" class="d-flex align-items-center gap-3 h-100 p-3 border rounded text-decoration-none text-body">
+                <i class="bi bi-receipt fs-3 text-primary" aria-hidden="true"></i>
+                <span>
+                    <span class="d-block fw-semibold">Siparişler</span>
+                    <span class="d-block small text-muted">Siparişleri inceleyin ve durumlarını güncelleyin.</span>
+                </span>
+                <i class="bi bi-chevron-right ms-auto text-muted" aria-hidden="true"></i>
+            </a>
+        </div>
+        <div class="col-12 col-md-6">
+            <a asp-area="Admin" asp-controller="Users" asp-action="Index" class="d-flex align-items-center gap-3 h-100 p-3 border rounded text-decoration-none text-body">
+                <i class="bi bi-people fs-3 text-primary" aria-hidden="true"></i>
+                <span>
+                    <span class="d-block fw-semibold">Kullanıcılar</span>
+                    <span class="d-block small text-muted">Hesapları, rolleri ve erişimleri yönetin.</span>
+                </span>
+                <i class="bi bi-chevron-right ms-auto text-muted" aria-hidden="true"></i>
+            </a>
+        </div>
+    </div>
+</div>

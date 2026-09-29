@@ -1,0 +1,111 @@
+@model IList<ProductListViewModel>
+
+@{
+	ViewData["Title"] = "Ürünler";
+}
+
+<div class="container py-4">
+	<div class="d-flex flex-column flex-sm-row justify-content-between align-items-sm-end gap-3 mb-4">
+		<div>
+			<span class="page-kicker">Yönetim</span>
+			<h1 class="h2 fw-bold mb-1">Ürünler</h1>
+			<p class="text-muted mb-0">Ürün bilgilerini, stokları ve fiyatları yönetin.</p>
+		</div>
+		<a asp-area="Admin" asp-controller="Products" asp-action="Create" class="btn btn-primary">
+			<i class="bi bi-plus-lg me-1" aria-hidden="true"></i> Yeni ürün
+		</a>
+	</div>
+
+	@if (TempData["Success"] is string successMessage)
+	{
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			@successMessage
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+		</div>
+	}
+	@if (TempData["Error"] is string errorMessage)
+	{
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			@errorMessage
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+		</div>
+	}
+
+	@if (Model.Count == 0)
+	{
+		<div class="border-top border-bottom py-5 text-center">
+			<i class="bi bi-box-seam fs-2 text-secondary" aria-hidden="true"></i>
+			<h2 class="h5 mt-3">Henüz ürün yok</h2>
+			<p class="text-muted">Mağazada listelenecek ilk ürününüzü ekleyin.</p>
+			<a asp-area="Admin" asp-controller="Products" asp-action="Create" class="btn btn-outline-primary">
+				Ürün oluştur
+			</a>
+		</div>
+	}
+	else
+	{
+		<div class="table-responsive">
+			<table class="table align-middle">
+				<thead class="table-light">
+					<tr>
+						<th scope="col">Ürün</th>
+						<th scope="col">Kategori / Marka</th>
+						<th scope="col" class="text-center">Stok</th>
+						<th scope="col" class="text-end">Fiyat</th>
+						<th scope="col" class="text-end">İşlemler</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var product in Model)
+					{
+						<tr>
+							<td>
+								<div class="d-flex align-items-center gap-3">
+									@if (!string.IsNullOrWhiteSpace(product.ImageUrl))
+									{
+										<img src="@product.ImageUrl" alt="@product.Name" width="52" height="52" class="rounded object-fit-cover" loading="lazy" />
+									}
+									else
+									{
+										<span class="d-inline-flex align-items-center justify-content-center bg-light rounded text-secondary" style="width:52px;height:52px">
+											<i class="bi bi-image" aria-hidden="true"></i>
+										</span>
+									}
+									<div>
+										<div class="fw-semibold">@product.Name</div>
+										<div class="small text-muted">#@product.Id</div>
+									</div>
+								</div>
+							</td>
+							<td>
+								<div>@product.CategoryName</div>
+								<div class="small text-muted">@product.BrandName</div>
+							</td>
+							<td class="text-center">
+								<span class="badge @(product.StockQuantity == 0 ? "text-bg-danger" : product.StockQuantity < 5 ? "text-bg-warning" : "text-bg-light")">
+									@product.StockQuantity
+								</span>
+							</td>
+							<td class="text-end text-nowrap">@product.Price.ToString("C2")</td>
+							<td>
+								<div class="d-flex justify-content-end gap-2">
+									<a asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@product.Id"
+									   class="btn btn-sm btn-outline-secondary" aria-label="@product.Name ürününü düzenle" title="Düzenle">
+										<i class="bi bi-pencil" aria-hidden="true"></i>
+									</a>
+									<form asp-area="Admin" asp-controller="Products" asp-action="Delete" asp-route-id="@product.Id" method="post"
+										  onsubmit="return confirm('Bu ürünü silmek istediğinize emin misiniz?');">
+										@Html.AntiForgeryToken()
+										<button type="submit" class="btn btn-sm btn-outline-danger" aria-label="@product.Name ürününü sil" title="Sil">
+											<i class="bi bi-trash" aria-hidden="true"></i>
+										</button>
+									</form>
+								</div>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+</div>

@@ -30,9 +30,7 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Ana Sayfa</a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
+                        
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Products" asp-action="Index">Ürünler</a>
                         </li>
@@ -40,44 +38,73 @@
 
                     <!-- Sağ Köşe: Sepetim / Giriş Yap / Kayıt Ol / Çıkış Yap -->
                     <ul class="navbar-nav ms-auto align-items-center gap-2">
-                        <!-- SEPETİM BUTONU (Giriş durumundan bağımsız her zaman görünür) -->
                         @{
+                            var isAdmin = User.Identity?.IsAuthenticated == true && User.IsInRole("Admin");
+                        }
+                        @if (isAdmin)
+                        {
+                            <li class="nav-item me-2">
+                                <div class="dropdown">
+                                    <button class="btn btn-outline-dark btn-sm rounded-pill px-3 py-1 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                        <i class="bi bi-grid me-1" aria-hidden="true"></i> İşlemler
+                                    </button>
+                                    <ul class="dropdown-menu dropdown-menu-end">
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Categories" asp-action="Index"><i class="bi bi-tags me-2"></i>Kategoriler</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Brands" asp-action="Index"><i class="bi bi-bookmark me-2"></i>Markalar</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Products" asp-action="Index"><i class="bi bi-box-seam me-2"></i>Ürünler</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Orders" asp-action="Index"><i class="bi bi-receipt me-2"></i>Siparişler</a></li>
+                                        <li><a class="dropdown-item" asp-area="Admin" asp-controller="Users" asp-action="Index"><i class="bi bi-people me-2"></i>Kullanıcılar</a></li>
+                                    </ul>
+                                </div>
+                            </li>
+                        }
+                        else
+                        {
                             var sessionCart = Context.Session.GetObjectFromJson<List<CartSessionItem>>("Cart");
                             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
                             var totalCount = userId is not null
                                 ? (await CartService.GetCartAsync(userId)).TotalItemCount
                                 : sessionCart?.Sum(x => x.Quantity) ?? 0;
+                            <li class="nav-item me-2">
+                                <a asp-area="" asp-controller="Carts" asp-action="Index" class="btn btn-outline-dark position-relative rounded-pill px-3 py-1 btn-sm">
+                                    <i class="bi bi-cart3 me-1"></i> Sepetim
+                                    @if (totalCount > 0)
+                                    {
+                                        <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                            @totalCount
+                                        </span>
+                                    }
+                                </a>
+                            </li>
                         }
-                        <li class="nav-item me-2">
-                            <a asp-controller="Carts" asp-action="Index" class="btn btn-outline-dark position-relative rounded-pill px-3 py-1 btn-sm">
-                                <i class="bi bi-cart3 me-1"></i> Sepetim
-                                @if (totalCount > 0)
-                                {
-                                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                        @totalCount
-                                    </span>
-                                }
-                            </a>
-                        </li>
 
                         @if (User.Identity?.IsAuthenticated == true)
                         {
                             var currentUser = await UserManager.GetUserAsync(User);
                             var displayName = string.IsNullOrWhiteSpace(currentUser?.FullName) ? "Hesabım" : currentUser.FullName;
                             <li class="nav-item me-2">
-                                <div class="dropdown">
-                                    <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                        <i class="bi bi-person-circle me-1"></i> @displayName
-                                    </button>
-                                    <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Orders"><i class="bi bi-box-seam me-2"></i>Siparişlerim</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Addresses"><i class="bi bi-geo-alt me-2"></i>Adreslerim</a></li>
-                                        <li><a class="dropdown-item" asp-controller="Account" asp-action="Membership"><i class="bi bi-person-gear me-2"></i>Üyelik bilgilerim</a></li>
-                                    </ul>
-                                </div>
+                                @if (isAdmin)
+                                {
+                                    <span class="btn btn-outline-primary btn-sm rounded-pill px-3">
+                                        <i class="bi bi-person-circle me-1" aria-hidden="true"></i> Admin @displayName
+                                    </span>
+                                }
+                                else
+                                {
+                                    <div class="dropdown">
+                                        <button class="btn btn-outline-primary btn-sm rounded-pill px-3 dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                            <i class="bi bi-person-circle me-1"></i> @displayName
+                                        </button>
+                                        <ul class="dropdown-menu dropdown-menu-end">
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Orders"><i class="bi bi-box-seam me-2"></i>Siparişlerim</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Addresses"><i class="bi bi-geo-alt me-2"></i>Adreslerim</a></li>
+                                            <li><a class="dropdown-item" asp-area="" asp-controller="Account" asp-action="Membership"><i class="bi bi-person-gear me-2"></i>Üyelik bilgilerim</a></li>
+                                        </ul>
+                                    </div>
+                                }
                             </li>
                             <li class="nav-item">
-                                <form asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
+                                <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="d-inline">
                                     @Html.AntiForgeryToken()
                                     <button type="submit" class="btn btn-outline-danger btn-sm rounded-pill px-3">Çıkış Yap</button>
                                 </form>
@@ -86,10 +113,10 @@
                         else
                         {
                             <li class="nav-item">
-                                <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-controller="Account" asp-action="Login">Giriş Yap</a>
+                                <a class="btn btn-outline-primary btn-sm rounded-pill px-3" asp-area="" asp-controller="Account" asp-action="Login">Giriş Yap</a>
                             </li>
                             <li class="nav-item">
-                                <a class="btn btn-primary btn-sm rounded-pill px-3" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
+                                <a class="btn btn-primary btn-sm rounded-pill px-3" asp-area="" asp-controller="Account" asp-action="Register">Kayıt Ol</a>
                             </li>
                         }
                     </ul>
@@ -99,6 +126,15 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (ViewContext.RouteData.Values["area"]?.ToString() == "Admin"
+                && ViewContext.RouteData.Values["controller"]?.ToString() != "Home")
+            {
+                <div class="pt-3">
+                    <a asp-area="Admin" asp-controller="Home" asp-action="Index" class="btn btn-outline-secondary btn-sm">
+                        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Yönetim paneline dön
+                    </a>
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

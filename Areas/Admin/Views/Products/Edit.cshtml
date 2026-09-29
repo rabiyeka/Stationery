@@ -1,0 +1,73 @@
+@model AdminProductFormViewModel
+
+@{
+	ViewData["Title"] = "Ürünü düzenle";
+}
+
+<div class="container py-4">
+	<div class="mb-4">
+		<a asp-area="Admin" asp-controller="Products" asp-action="Index" class="link-secondary text-decoration-none">
+			<i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Ürünlere dön
+		</a>
+		<div class="mt-3">
+			<span class="page-kicker">Yönetim / Ürünler</span>
+			<h1 class="h2 fw-bold mb-1">Ürünü düzenle</h1>
+			<p class="text-muted mb-0">Ürün bilgilerini ve görselini güncelleyin.</p>
+		</div>
+	</div>
+
+	@if (TempData["Success"] is string successMessage)
+	{
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			@successMessage
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+		</div>
+	}
+	@if (TempData["Error"] is string errorMessage)
+	{
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			@errorMessage
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+		</div>
+	}
+
+	<div class="row g-5">
+		<div class="col-12 col-lg-8 col-xl-7">
+			<form asp-area="Admin" asp-controller="Products" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+				@Html.AntiForgeryToken()
+				<partial name="_ProductFormFields" model="Model" />
+				<div class="d-flex flex-wrap gap-2">
+					<button type="submit" class="btn btn-primary">
+						<i class="bi bi-check-lg me-1" aria-hidden="true"></i> Değişiklikleri kaydet
+					</button>
+					<a asp-area="Admin" asp-controller="Products" asp-action="Index" class="btn btn-outline-secondary">Vazgeç</a>
+				</div>
+			</form>
+		</div>
+
+		<div class="col-12 col-lg-4">
+			<section aria-labelledby="product-image-title">
+				<h2 id="product-image-title" class="h5 fw-bold">Ürün görseli</h2>
+				@if (!string.IsNullOrWhiteSpace(Model.ImageUrl))
+				{
+					<img src="@Model.ImageUrl" alt="@Model.Name" class="img-fluid rounded border mb-3" />
+				}
+				<form asp-area="Admin" asp-controller="Products" asp-action="UploadImage" asp-route-id="@Model.Id" method="post" enctype="multipart/form-data">
+					@Html.AntiForgeryToken()
+					<div class="mb-3">
+						<label for="imageFile" class="form-label">Görsel dosyası seçin</label>
+						<input id="imageFile" name="imageFile" type="file" class="form-control" accept=".jpg,.jpeg,.png,.webp,.gif,image/jpeg,image/png,image/webp,image/gif" />
+						<div class="form-text">JPG, PNG, WEBP veya GIF.</div>
+					</div>
+					<button type="submit" class="btn btn-outline-primary">
+						<i class="bi bi-upload me-1" aria-hidden="true"></i> Görseli yükle
+					</button>
+				</form>
+			</section>
+		</div>
+	</div>
+</div>
+
+@section Scripts {
+	<partial name="_ValidationScriptsPartial" />
+}

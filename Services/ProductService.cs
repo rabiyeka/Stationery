@@ -28,6 +28,7 @@ public class ProductService : IProductService
             Name = model.Name.Trim(),
             Description = model.Description!.Trim(),
             Price = model.Price,
+            ImageUrl = model.ImageUrl?.Trim() ?? string.Empty,
             CategoryId = model.CategoryId,
             BrandId = model.BrandId,
             StockQuantity = model.StockQuantity

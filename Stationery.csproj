@@ -17,6 +17,10 @@
 
   <ItemGroup>
     <Folder Include=".gitignore/" />
+    <Folder Include="Areas/Admin/Views/Brands/" />
+    <Folder Include="Areas/Admin/Views/Orders/" />
+    <Folder Include="Areas/Admin/Views/Products/" />
+    <Folder Include="Areas/Admin/Views/Users/" />
     <Folder Include="Data/" />
     <Folder Include="Extensions/" />
     <Folder Include="Repositories/" />

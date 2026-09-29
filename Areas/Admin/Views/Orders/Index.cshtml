@@ -1,0 +1,87 @@
+@model IList<AdminOrderSummaryViewModel>
+
+@{
+	ViewData["Title"] = "Siparişler";
+}
+
+<div class="container py-4">
+	<div class="mb-4">
+		<span class="page-kicker">Yönetim</span>
+		<h1 class="h2 fw-bold mb-1">Siparişler</h1>
+		<p class="text-muted mb-0">Siparişleri inceleyin ve durumlarını güncelleyin.</p>
+	</div>
+
+	@if (TempData["Success"] is string successMessage)
+	{
+		<div class="alert alert-success alert-dismissible fade show" role="alert">
+			@successMessage
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+		</div>
+	}
+	@if (TempData["Error"] is string errorMessage)
+	{
+		<div class="alert alert-danger alert-dismissible fade show" role="alert">
+			@errorMessage
+			<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Kapat"></button>
+		</div>
+	}
+
+	@if (Model.Count == 0)
+	{
+		<div class="border-top border-bottom py-5 text-center">
+			<i class="bi bi-receipt fs-2 text-secondary" aria-hidden="true"></i>
+			<h2 class="h5 mt-3">Henüz sipariş yok</h2>
+			<p class="text-muted mb-0">Yeni siparişler burada görüntülenecek.</p>
+		</div>
+	}
+	else
+	{
+		<div class="table-responsive">
+			<table class="table align-middle">
+				<thead class="table-light">
+					<tr>
+						<th scope="col">Sipariş</th>
+						<th scope="col">Müşteri</th>
+						<th scope="col">Teslimat adresi</th>
+						<th scope="col">Tarih</th>
+						<th scope="col" class="text-center">Ürün</th>
+						<th scope="col" class="text-end">Toplam</th>
+						<th scope="col">Durum</th>
+					</tr>
+				</thead>
+				<tbody>
+					@foreach (var order in Model)
+					{
+						<tr>
+							<th scope="row" class="text-nowrap">#@order.Id</th>
+							<td>@order.CustomerEmail</td>
+							<td class="small text-break" title="@order.ShippingAddress">
+								@(string.IsNullOrWhiteSpace(order.ShippingAddress) ? "Adres bilgisi yok" : order.ShippingAddress)
+							</td>
+							<td class="text-nowrap">@order.OrderDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</td>
+							<td class="text-center">@order.ItemCount</td>
+							<td class="text-end text-nowrap">@order.TotalAmount.ToString("C2")</td>
+							<td>
+								<form asp-area="Admin" asp-controller="Orders" asp-action="UpdateStatus" asp-route-id="@order.Id" method="post"
+									  class="d-flex align-items-center gap-2">
+									@Html.AntiForgeryToken()
+									<select name="status" class="form-select form-select-sm" aria-label="#@order.Id sipariş durumu">
+										<option value="Pending" selected="@(order.Status == "Pending")">Beklemede</option>
+										<option value="Preparing" selected="@(order.Status == "Preparing")">Hazırlanıyor</option>
+										<option value="Shipped" selected="@(order.Status == "Shipped")">Kargoya verildi</option>
+										<option value="Delivered" selected="@(order.Status == "Delivered")">Teslim edildi</option>
+										<option value="Cancelled" selected="@(order.Status == "Cancelled")">İptal edildi</option>
+									</select>
+									<button type="submit" class="btn btn-sm btn-outline-primary text-nowrap" title="Durumu güncelle">
+										<i class="bi bi-check-lg" aria-hidden="true"></i>
+										<span class="visually-hidden">Durumu güncelle</span>
+									</button>
+								</form>
+							</td>
+						</tr>
+					}
+				</tbody>
+			</table>
+		</div>
+	}
+</div>

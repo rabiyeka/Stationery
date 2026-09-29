@@ -10,6 +10,7 @@ public interface IProductService
     Task<ProductDetailsViewModel?> GetProductDetailsAsync(int id);
     Task<IList<ProductListViewModel>> GetProductsForAdminAsync();
     Task<IList<ProductListViewModel>> GetAllProductsAsync(int? categoryId = null, int? brandId = null);
+    Task<AdminProductFormViewModel?> GetProductForEditAsync(int id);
     Task<(bool Success, int? ProductId, string? Error)> CreateProductAsync(AdminProductFormViewModel model);
     Task<(bool Success, string? Error)> UpdateProductAsync(AdminProductFormViewModel model);
     Task<(bool Success, string? Error)> DeleteProductAsync(int id);

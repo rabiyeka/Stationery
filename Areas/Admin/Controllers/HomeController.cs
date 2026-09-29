@@ -6,9 +6,10 @@ namespace Stationery.Areas.Admin.Controllers
     public class HomeController : AdminBaseController
     {
         // GET: HomeController
-        public ActionResult Index()
+        public IActionResult Index()
         {
-            return View();
+            var redirect = RequireAdmin();
+            return redirect ?? View();
         }
 
     }

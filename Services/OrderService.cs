@@ -73,7 +73,8 @@ public class OrderService : IOrderService
                 Status=o.OrderStatus.ToString(),
                 TotalAmount=o.TotalAmount,
                 ItemCount=o.Items.Sum(i=>i.Quantity),
-                CustomerEmail = o.User!.Email ?? string.Empty
+                CustomerEmail = o.User!.Email ?? string.Empty,
+                ShippingAddress = o.ShippingAddress
             }).ToListAsync();
     }
     public async Task<IList<OrderDetailsViewModel>> GetOrdersForUserAsync(string userId)
