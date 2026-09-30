@@ -43,6 +43,18 @@
                             </div>
                             <p class="text-muted small">@order.OrderDate.ToLocalTime().ToString("dd.MM.yyyy HH:mm")</p>
                             <p class="mb-3">@order.Items.Sum(i => i.Quantity) ürün</p>
+                            <div class="mb-3">
+                                <h3 class="h6 fw-semibold">Sipariş içeriği</h3>
+                                <ul class="list-unstyled mb-0">
+                                    @foreach (var item in order.Items)
+                                    {
+                                        <li class="d-flex justify-content-between gap-3 py-1">
+                                            <span>@item.ProductName</span>
+                                            <span class="text-muted text-nowrap">× @item.Quantity</span>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
                             <div class="d-flex justify-content-between border-top pt-3">
                                 <span class="fw-bold">Toplam</span>
                                 <span class="fw-bold text-primary">@order.TotalAmount.ToString("C2")</span>
