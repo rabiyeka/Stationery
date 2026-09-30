@@ -57,11 +57,63 @@
                         <div class="mb-2"><label asp-for="Form.Title" class="form-label">Adres başlığı</label><input asp-for="Form.Title" class="form-control" /><span asp-validation-for="Form.Title" class="text-danger small"></span></div>
                         <div class="mb-2"><label asp-for="Form.FullName" class="form-label">Ad soyad</label><input asp-for="Form.FullName" class="form-control" /><span asp-validation-for="Form.FullName" class="text-danger small"></span></div>
                         <div class="mb-2"><label asp-for="Form.Phone" class="form-label">Telefon</label><input asp-for="Form.Phone" class="form-control" /><span asp-validation-for="Form.Phone" class="text-danger small"></span></div>
-                        <div class="row g-2">
-                            <div class="col-6 mb-2"><label asp-for="Form.City" class="form-label">İl</label><input asp-for="Form.City" class="form-control" /></div>
-                            <div class="col-6 mb-2"><label asp-for="Form.District" class="form-label">İlçe</label><input asp-for="Form.District" class="form-control" /></div>
+                        <div class="mb-3" data-location-picker
+                             data-provinces-url="/api/locations/provinces"
+                             data-districts-url="/api/locations/provinces/__id__/districts"
+                             data-neighborhoods-url="/api/locations/districts/__id__/neighborhoods"
+                             data-selected-city="@Model.Form.City"
+                             data-selected-district="@Model.Form.District"
+                             data-selected-neighborhood="@Model.Form.Neighborhood">
+                            <div data-location-selects>
+                                <div class="row g-2">
+                                    <div class="col-6 mb-2">
+                                        <label asp-for="Form.City" class="form-label">İl</label>
+                                        <select asp-for="Form.City" class="form-select" data-location-province required>
+                                            <option value="">İl seçin</option>
+                                        </select>
+                                        <span asp-validation-for="Form.City" class="text-danger small"></span>
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <label asp-for="Form.District" class="form-label">İlçe</label>
+                                        <select asp-for="Form.District" class="form-select" data-location-district required disabled>
+                                            <option value="">Önce il seçin</option>
+                                        </select>
+                                        <span asp-validation-for="Form.District" class="text-danger small"></span>
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label asp-for="Form.Neighborhood" class="form-label">Mahalle</label>
+                                    <select asp-for="Form.Neighborhood" class="form-select" data-location-neighborhood required disabled>
+                                        <option value="">Önce ilçe seçin</option>
+                                    </select>
+                                    <span asp-validation-for="Form.Neighborhood" class="text-danger small"></span>
+                                </div>
+                            </div>
+
+                            <div class="d-none" data-location-manual>
+                                <div class="row g-2">
+                                    <div class="col-6 mb-2">
+                                        <label for="manualCity" class="form-label">İl</label>
+                                        <input id="manualCity" name="Form.City" class="form-control" value="@Model.Form.City" autocomplete="address-level1" disabled required />
+                                    </div>
+                                    <div class="col-6 mb-2">
+                                        <label for="manualDistrict" class="form-label">İlçe</label>
+                                        <input id="manualDistrict" name="Form.District" class="form-control" value="@Model.Form.District" autocomplete="address-level2" disabled required />
+                                    </div>
+                                </div>
+                                <div class="mb-2">
+                                    <label for="manualNeighborhood" class="form-label">Mahalle</label>
+                                    <input id="manualNeighborhood" name="Form.Neighborhood" class="form-control" value="@Model.Form.Neighborhood" disabled required />
+                                </div>
+                            </div>
+
+                            <div class="d-flex flex-wrap align-items-center gap-2 mt-1">
+                                <button type="button" class="btn btn-link btn-sm p-0" data-location-toggle aria-expanded="false">
+                                    Konum bilgilerini elle gir
+                                </button>
+                                <span class="small text-muted" data-location-status role="status" aria-live="polite"></span>
+                            </div>
                         </div>
-                        <div class="mb-2"><label asp-for="Form.Neighborhood" class="form-label">Mahalle</label><input asp-for="Form.Neighborhood" class="form-control" /></div>
                         <div class="mb-2"><label asp-for="Form.Detail" class="form-label">Açık adres</label><textarea asp-for="Form.Detail" class="form-control" rows="2"></textarea></div>
                         <div class="mb-3"><label asp-for="Form.PostalCode" class="form-label">Posta kodu</label><input asp-for="Form.PostalCode" class="form-control" /></div>
                         <button class="btn btn-primary w-100 rounded-pill" type="submit">Adresi kaydet</button>
@@ -72,4 +124,7 @@
     </div>
 </div>
 
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/account-address-locations.js" asp-append-version="true"></script>
+}

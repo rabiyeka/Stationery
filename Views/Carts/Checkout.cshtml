@@ -81,4 +81,33 @@
     </form>
 </div>
 
-@section Scripts { <partial name="_ValidationScriptsPartial" /> }
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        (() => {
+            const fieldNames = ["AddressId", "PaymentMethod"];
+
+            const clearValidationMessage = fieldName => {
+                if (!document.querySelector(`[name="${fieldName}"]:checked`)) return;
+
+                const message = document.querySelector(`[data-valmsg-for="${fieldName}"]`);
+                if (message) {
+                    message.textContent = "";
+                    message.classList.remove("field-validation-error");
+                    message.classList.add("field-validation-valid");
+                }
+
+                document.querySelectorAll(`[name="${fieldName}"]`).forEach(input => {
+                    input.classList.remove("input-validation-error");
+                });
+            };
+
+            for (const fieldName of fieldNames) {
+                document.querySelectorAll(`[name="${fieldName}"]`).forEach(input => {
+                    input.addEventListener("change", () => clearValidationMessage(fieldName));
+                });
+                clearValidationMessage(fieldName);
+            }
+        })();
+    </script>
+}

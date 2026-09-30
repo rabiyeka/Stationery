@@ -188,4 +188,5 @@
 /Users/rabiyekargin/Desktop/Stationery/bin/Debug/net10.0/Microsoft.AspNetCore.Identity.EntityFrameworkCore.dll
 /Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/Stationery.sourcelink.json
 /Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/compressed/x695wzr1tm-{0}-x5p0k5e71j-x5p0k5e71j.gz
-/Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/compressed/f7aeifbhyh-{0}-gcc18u7q0g-gcc18u7q0g.gz
+/Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/compressed/f7aeifbhyh-{0}-5ipweew5fc-5ipweew5fc.gz
+/Users/rabiyekargin/Desktop/Stationery/obj/Debug/net10.0/compressed/cj1n54jelt-{0}-93wg6g1gst-93wg6g1gst.gz

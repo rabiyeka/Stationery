@@ -10,6 +10,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddDbContext<StationeryDbContext>(options => options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
+builder.Services.AddMemoryCache();
+builder.Services.AddHttpClient<ILocationService, TurkiyeApiLocationService>(client =>
+{
+    client.BaseAddress = new Uri("https://api.turkiyeapi.dev/");
+    client.Timeout = TimeSpan.FromSeconds(10);
+    client.DefaultRequestHeaders.UserAgent.ParseAdd("Stationery/1.0");
+});
 
 builder.Services
     .AddIdentity<StationeryUser, IdentityRole>()

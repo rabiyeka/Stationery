@@ -173,6 +173,13 @@ namespace Stationery.Controllers
             }
             if (!string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl))
             {
+                var returnPath = returnUrl.Split('?')[0].TrimEnd('/');
+                var checkoutPath = Url.Action("Checkout", "Carts")?.TrimEnd('/');
+                if (string.Equals(returnPath, checkoutPath, StringComparison.OrdinalIgnoreCase))
+                {
+                    return RedirectToAction("Index", "Carts");
+                }
+
                 return Redirect(returnUrl);
             }
             return RedirectToAction("Index", "Home");

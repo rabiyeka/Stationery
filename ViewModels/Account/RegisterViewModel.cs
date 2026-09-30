@@ -5,7 +5,7 @@ namespace Stationery.ViewModels.Account;
 public class RegisterViewModel
 {
     [Required(ErrorMessage = "E-posta adresi zorunludur.")]
-    [EmailAddress(ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
+    [RegularExpression(@"^[^@\s]+@[^@\s.]+(?:\.[^@\s.]+)+$", ErrorMessage = "Geçerli bir e-posta adresi giriniz.")]
     [Display(Name = "E-posta")]
     public string Email { get; set; } = null!;
 
