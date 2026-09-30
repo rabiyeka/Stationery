@@ -13,7 +13,7 @@ public class AdminProductFormViewModel
     public string Name { get; set; } = null!;
 
 
-    [MaxLength(100, ErrorMessage = "Açıklama en fazla 100 karakter olabilir.")]
+    [MaxLength(2000, ErrorMessage = "Açıklama en fazla 2000 karakter olabilir.")]
     [Display(Name = "Ürün Açıklaması")]
     public string Description { get; set; } = null!;
 
