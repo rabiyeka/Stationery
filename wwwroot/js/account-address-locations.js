@@ -7,6 +7,7 @@
     const provinceSelect = picker.querySelector("[data-location-province]");
     const districtSelect = picker.querySelector("[data-location-district]");
     const neighborhoodSelect = picker.querySelector("[data-location-neighborhood]");
+    const postalCodeInput = document.querySelector('[name="Form.PostalCode"]');
     const manualInputs = Array.from(manualContainer.querySelectorAll("input"));
     const modeToggle = picker.querySelector("[data-location-toggle]");
     const status = picker.querySelector("[data-location-status]");
@@ -45,6 +46,7 @@
         for (const location of locations) {
             const option = new Option(location.name, location.name);
             option.dataset.id = location.id;
+            option.dataset.postalCode = location.postalCode || "";
             select.add(option);
         }
         select.disabled = false;
@@ -58,6 +60,13 @@
     };
 
     const getSelectedId = select => select.selectedOptions[0]?.dataset.id;
+
+    const setPostalCodeFromNeighborhood = () => {
+        const postalCode = neighborhoodSelect.selectedOptions[0]?.dataset.postalCode;
+        if (postalCode && postalCodeInput) {
+            postalCodeInput.value = postalCode;
+        }
+    };
 
     const loadDistricts = async selectedName => {
         districtSelect.disabled = true;
@@ -81,9 +90,11 @@
         setStatus("Mahalleler yükleniyor...");
         const url = picker.dataset.neighborhoodsUrl.replace("__id__", districtId);
         await fetchLocations(url, neighborhoodSelect, "Mahalle seçin", selectedName);
+        setPostalCodeFromNeighborhood();
     };
 
     provinceSelect.addEventListener("change", async () => {
+        postalCodeInput.value = "";
         try {
             await loadDistricts();
             setStatus(provinceSelect.value ? "İlçe seçin." : "İl seçerek başlayın.");
@@ -94,6 +105,7 @@
     });
 
     districtSelect.addEventListener("change", async () => {
+        postalCodeInput.value = "";
         try {
             await loadNeighborhoods();
             setStatus(districtSelect.value ? "Mahalle seçin." : "");
@@ -102,6 +114,8 @@
             setMode(true);
         }
     });
+
+    neighborhoodSelect.addEventListener("change", setPostalCodeFromNeighborhood);
 
     modeToggle.addEventListener("click", () => {
         const useManualEntry = modeToggle.getAttribute("aria-expanded") !== "true";

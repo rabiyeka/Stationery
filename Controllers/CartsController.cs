@@ -46,24 +46,26 @@ namespace Stationery.Controllers
         [AllowAnonymous]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddToCart(int productId, int quantity = 1)
+        public async Task<IActionResult> AddToCart(int productId, int quantity = 1, string? returnUrl = null)
         {
             if (quantity < 1)
             {
                 quantity = 1;
             }
 
+            var redirectUrl = !string.IsNullOrWhiteSpace(returnUrl) && Url.IsLocalUrl(returnUrl)
+                ? returnUrl
+                : Url.Action("Index", "Products")!;
             var userId = GetUserId();
 
             if (userId is not null)
             {
                 var result = await _cartService.AddItemAsync(userId, productId, quantity);
                 TempData[result.Success ? "Success" : "Error"] = result.Success ? "Ürün sepete eklendi." : result.ErrorMessage;
-                return RedirectToAction("Index", "Products");
+                return Redirect(redirectUrl);
             }
 
-            // Kullanıcı giriş yapmışsa mevcut servisinizle ekleyin (Eğer servisiniz destekliyorsa)
-            // Ya da herkes için hızlıca Session'a ekleyelim:
+            
             var product = await _context.Products.FindAsync(productId);
             if (product == null) return NotFound();
 
@@ -89,7 +91,7 @@ namespace Stationery.Controllers
             HttpContext.Session.SetObjectAsJson("Cart", cart);
             TempData["Success"] = "Ürün sepete eklendi.";
 
-            return RedirectToAction("Index", "Products");
+            return Redirect(redirectUrl);
         }
 
         [HttpPost]

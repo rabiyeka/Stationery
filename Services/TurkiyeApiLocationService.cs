@@ -36,7 +36,7 @@ public sealed class TurkiyeApiLocationService : ILocationService
     {
         return GetCachedLocationsAsync(
             $"locations:districts:{districtId}:neighborhoods",
-            $"v2/districts/{districtId}/neighborhoods?fields=id,name&limit=1000",
+            $"v2/districts/{districtId}/neighborhoods?fields=id,name,postalCode&limit=1000",
             cancellationToken);
     }
 
